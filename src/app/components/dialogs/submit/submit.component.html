@@ -1,0 +1,24 @@
+<div class="container">
+
+    <h3>Підтвердіть дані:</h3>
+    <p>Початок відпустки: {{ data.start | date: "d MMMM YYYY": '+2': 'uk' }}</p>
+    <p>Кінець відпустки: {{ data.end | date: "d MMMM YYYY": '+2': 'uk' }}</p>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Оберіть тип: </mat-label>
+        <mat-select [formControl]="type">
+            <mat-option value="medical">Лікарняний</mat-option>
+            <mat-option value="vacation">Відпочинок</mat-option>
+            <mat-option value="decree">Дикретна</mat-option>
+        </mat-select>
+    </mat-form-field>
+    
+    <mat-form-field>
+        <mat-label>Додатковий коментар</mat-label>
+        <textarea matInput placeholder="Місце для тексту" [formControl]="comment"></textarea>
+    </mat-form-field>
+    
+    <button mat-raised-button color="primary" (click)="submit()">Надіслати запит</button>
+
+</div>
+

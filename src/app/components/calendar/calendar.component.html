@@ -1,0 +1,18 @@
+<mat-form-field appearance="fill" >
+  <mat-label>Введіть термін: </mat-label>
+  <mat-date-range-input [rangePicker]="rangePicker" [formGroup]="data">
+    <input matStartDate #matStartDate placeholder="Початок" formControlName="start">
+    <input matEndDate #matEndDate placeholder="Кінець" formControlName="end">
+  </mat-date-range-input>
+  <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
+  <mat-date-range-picker #rangePicker touchUi >
+    <mat-date-range-picker-actions>
+      <button mat-button matDateRangePickerCancel>Відмінити</button>
+      <button mat-raised-button 
+          color="primary" 
+          matDateRangePickerApply
+          (click)="openDialog()"
+      >Підтвердити</button>
+    </mat-date-range-picker-actions>
+  </mat-date-range-picker>
+</mat-form-field>
