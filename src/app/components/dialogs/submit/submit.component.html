@@ -1,24 +1,41 @@
 <div class="container">
 
-    <h3>Підтвердіть дані:</h3>
-    <p>Початок відпустки: {{ data.start | date: "d MMMM YYYY": '+2': 'uk' }}</p>
-    <p>Кінець відпустки: {{ data.end | date: "d MMMM YYYY": '+2': 'uk' }}</p>
+  <h3>Підтвердіть дані:</h3>
 
-    <mat-form-field appearance="fill">
-        <mat-label>Оберіть тип: </mat-label>
-        <mat-select [formControl]="type">
-            <mat-option value="medical">Лікарняний</mat-option>
-            <mat-option value="vacation">Відпочинок</mat-option>
-            <mat-option value="decree">Дикретна</mat-option>
-        </mat-select>
+  <form [formGroup]="group">
+    <mat-form-field appearance="fill" class="select-container">
+      <mat-label>Оберіть тип: </mat-label>
+      <mat-select formControlName="typeControl">
+        <mat-option value="medical">Лікарняний</mat-option>
+        <mat-option value="vacation">Відпочинок</mat-option>
+      </mat-select>
     </mat-form-field>
-    
-    <mat-form-field>
-        <mat-label>Додатковий коментар</mat-label>
-        <textarea matInput placeholder="Місце для тексту" [formControl]="comment"></textarea>
+
+    <div class="datapicker-container">
+      <mat-form-field appearance="fill">
+        <mat-label>Стартова дата</mat-label>
+        <input matInput [matDatepicker]="start" formControlName="startControl">
+        <mat-datepicker-toggle matIconSuffix [for]="start"></mat-datepicker-toggle>
+        <mat-datepicker #start></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Кінцвета дата</mat-label>
+        <input matInput [matDatepicker]="end" formControlName="endControl">
+        <mat-datepicker-toggle matIconSuffix [for]="end"></mat-datepicker-toggle>
+        <mat-datepicker #end></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field class="textfield-container">
+      <mat-label>Додатковий коментар</mat-label>
+      <textarea matInput placeholder="Місце для тексту" formControlName="commentControl"></textarea>
     </mat-form-field>
-    
+  </form>
+
+  <div class="button-container">
+    <button mat-raised-button color="warn" (click)="close()">Закрити</button>
     <button mat-raised-button color="primary" (click)="submit()">Надіслати запит</button>
+  </div>
 
+  <button class="close-button"><span class="material-icons" (click)="close()">close</span></button>
 </div>
-

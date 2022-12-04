@@ -1,18 +1,52 @@
-<mat-form-field appearance="fill" >
-  <mat-label>Введіть термін: </mat-label>
-  <mat-date-range-input [rangePicker]="rangePicker" [formGroup]="data">
-    <input matStartDate #matStartDate placeholder="Початок" formControlName="start">
-    <input matEndDate #matEndDate placeholder="Кінець" formControlName="end">
-  </mat-date-range-input>
-  <mat-datepicker-toggle matIconSuffix [for]="rangePicker"></mat-datepicker-toggle>
-  <mat-date-range-picker #rangePicker touchUi >
-    <mat-date-range-picker-actions>
-      <button mat-button matDateRangePickerCancel>Відмінити</button>
-      <button mat-raised-button 
-          color="primary" 
-          matDateRangePickerApply
-          (click)="openDialog()"
-      >Підтвердити</button>
-    </mat-date-range-picker-actions>
-  </mat-date-range-picker>
-</mat-form-field>
+<div class="container">
+  <mat-card class="calendar-body">
+    <ul class="calendar-control">
+      <li class="control-prev">
+        <button mat-raised-button color="primary" (click)="go(-1)"><</button>
+      </li>
+      <li class="control-month">{{ dateService.date | async | moment | titlecase }}</li>
+      <li class="control-next">
+        <button mat-raised-button color="primary" (click)="go(1)">></button>
+      </li>
+    </ul>
+    <table class="calendar-table">
+      <thead class="table-head">
+        <tr>
+          <th>Понеділок</th>
+          <th>Вівторок</th>
+          <th>Середа</th>
+          <th>Четвер</th>
+          <th>П'ятниця</th>
+          <th>Субота</th>
+          <th>Неділя</th>
+        </tr>
+      </thead>
+      <tbody class="table-body">
+        <tr *ngFor="let week of calendar">
+          <td *ngFor="let day of week.days" [ngClass]="{'disabled': day.disabled, 'today': day.current}" (click)="details(day)">
+            <span>{{ day.value.format("DD")}}</span>
+            <ul class="abcense-list" *ngIf="day.abcence.length">
+              <li *ngFor="let item of day.abcence">Тип: {{ item.type }}</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
+
+  <div class="details">
+    <ul class="details-list">
+      <li><h3>Деталі:</h3></li>
+        <ul>
+          <li>Дата: {{ current.value.format("LL") }}</li>
+          <ul *ngFor="let item of current.abcence" class="abcence-list">
+            <li>Кінець: {{ item.end.format("LL")}}</li>
+            <li>Причина: {{ item.type }}</li>
+            <li>Коментар: {{ item.comment }}</li>
+          </ul>
+          <li *ngIf="current.abcence.length === 0">На эту дану немає запланованих відпусток</li>
+      </ul> 
+    </ul>
+
+  </div>
+</div>
