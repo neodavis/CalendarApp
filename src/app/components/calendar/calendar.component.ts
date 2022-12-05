@@ -9,18 +9,23 @@ import { DataService } from 'src/app/service/data.service';
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent {
-  @Input() data: any = [];
+
+export  class CalendarComponent {
+  @Input() data: Array<Object> = [];
   constructor(public dialog: MatDialog, public dateService: DataService) {}
 
   public calendar: any;
   public current: any;
 
-  go(val: number) {
-    this.dateService.changeMonth(val);
+  nextMonth() {
+    this.dateService.changeMonth(1);
   }
 
-  build(now: moment.Moment) {
+  prevMonth() {
+    this.dateService.changeMonth(-1);
+  }
+
+  setCalendar(now: moment.Moment) {
     let startOf = now.clone().startOf('month').startOf('week');
     let endOf = now.clone().endOf('month').endOf('week');
     let date = startOf.clone().subtract(1, 'day');
@@ -42,15 +47,17 @@ export class CalendarComponent {
           }),
       });
     }
+    console.log(calendar);
+    
     this.calendar = calendar;
   }
 
-  details(day: any) {
+  getDateDetails(day: Object) {
     this.current = day;
   }
 
   ngOnInit() {
-    this.dateService.date.subscribe(this.build.bind(this));
+    this.dateService.date.subscribe(this.setCalendar.bind(this));
     this.current = {
       value: moment(),
       disabled: false,

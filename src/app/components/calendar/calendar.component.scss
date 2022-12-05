@@ -22,11 +22,11 @@
 .calendar-table {
   border-collapse: collapse;
 
-  th {
-    text-align-last: right;
+  .table-head__cell {
+    text-align: right;
   }
 
-  td {
+  .table-body__cell {
     text-align: right;
     vertical-align: top;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -38,7 +38,7 @@
       background-color: rgba(0, 0, 0, 0.1);
 
       .abcense-list {
-        li {
+        .abcense-list__item {
           background: gray;
         }
       }
@@ -58,7 +58,7 @@
       color: white;
       font-size: 12px;
 
-      li {
+      .abcense-list__item {
         padding: 10px;
         margin-bottom: 3px;
         border-radius: 10px;
@@ -73,15 +73,13 @@
   }
 }
 
-.details {
+.details-container {
   padding: 5px 10px;
-
-  .abcence-list {
-    width: 100%;
+  
+  mat-card {
     background-color: #3f51b5;
-    padding: 5px 10px;
-    margin: 10px 0;
-    border-radius: 10px;
     color: white;
+    margin-top: 25px;
+    padding: 20px;
   }
 }

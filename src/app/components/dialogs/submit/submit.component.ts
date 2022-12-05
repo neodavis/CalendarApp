@@ -21,12 +21,13 @@ export class SubmitComponent {
   ) {}
 
   public result = {};
-  public group = new FormGroup({
+  public group: FormGroup = new FormGroup({
     typeControl: new FormControl('', [Validators.required]),
     startControl: new FormControl('', [Validators.required]),
     endControl: new FormControl('', [Validators.required]),
     commentControl: new FormControl(''),
   });
+
 
   public submit() {
     if (this.group.valid) {
