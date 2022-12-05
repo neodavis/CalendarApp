@@ -1,21 +1,23 @@
+import { Day } from '../../interfaces/day';
+import { Week } from '../../interfaces/week';
+import { Abcence } from '../../interfaces/abcence';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import 'moment/locale/uk';
-import { DataService } from 'src/app/service/data.service';
+import { DataService } from 'src/app/service/calendar.service';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-
-export  class CalendarComponent {
-  @Input() data: Array<Object> = [];
+export class CalendarComponent {
+  @Input() data: Abcence[] = [];
   constructor(public dialog: MatDialog, public dateService: DataService) {}
 
-  public calendar: any;
-  public current: any;
+  public calendar: Week[];
+  public current: Day;
 
   nextMonth() {
     this.dateService.changeMonth(1);
@@ -39,7 +41,7 @@ export  class CalendarComponent {
             let value = date.add(1, 'day').clone();
             let disabled = !now.isSame(value, 'month');
             let current = moment().isSame(value, 'day');
-            let abcence = this.data.filter((e: any) => {
+            let abcence: Abcence[] = this.data.filter((e: any) => {
               return e.start.isSame(value, 'day');
             });
 
@@ -47,13 +49,12 @@ export  class CalendarComponent {
           }),
       });
     }
-    console.log(calendar);
-    
     this.calendar = calendar;
   }
 
-  getDateDetails(day: Object) {
+  getDateDetails(day: Day) {
     this.current = day;
+    console.log(this.current);
   }
 
   ngOnInit() {

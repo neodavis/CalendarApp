@@ -11,7 +11,7 @@ import localeUk from '@angular/common/locales/uk';
 import { registerLocaleData } from '@angular/common';
 import { MessageComponent } from './components/dialogs/message/message.component';
 import { HeaderComponent } from './components/header/header.component';
-import { DateFormatPipe } from './pipe/dateFormat.pipe';
+import { DateFormatPipe } from './pipe/date-format';
 
 registerLocaleData(localeUk, 'uk');
 

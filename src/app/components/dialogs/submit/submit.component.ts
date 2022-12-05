@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
 import { Component, Inject } from '@angular/core';
 import {
   MatDialog,
@@ -7,6 +7,18 @@ import {
 } from '@angular/material/dialog';
 import { MessageComponent } from '../message/message.component';
 import * as moment from 'moment';
+
+export const dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  let start: any = control.parent?.get('startControl')
+  let end: any = control.parent?.get('endControl')
+  
+  if (start && moment(start.value).isAfter(moment(end.value))) {
+    return {dateError: 'start is greater than end'}
+  }
+  
+  return null
+}
+
 
 @Component({
   selector: 'app-submit',
@@ -23,8 +35,8 @@ export class SubmitComponent {
   public result = {};
   public group: FormGroup = new FormGroup({
     typeControl: new FormControl('', [Validators.required]),
-    startControl: new FormControl('', [Validators.required]),
-    endControl: new FormControl('', [Validators.required]),
+    startControl: new FormControl('', [Validators.required, dateValidator]),
+    endControl: new FormControl('', [Validators.required, dateValidator]),
     commentControl: new FormControl(''),
   });
 

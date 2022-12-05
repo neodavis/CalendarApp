@@ -4,7 +4,7 @@
       <li class="control-prev">
         <button mat-raised-button color="primary" (click)="prevMonth()"><</button>
       </li>
-      <li class="control-month">{{ dateService.date | async | DateFormat | titlecase }}</li>
+      <li class="control-month">{{ dateService.date | async | dateFormat | titlecase }}</li>
       <li class="control-next">
         <button mat-raised-button color="primary" (click)="nextMonth()">></button>
       </li>

@@ -1,3 +1,4 @@
+import { Abcence } from './interfaces/abcence';
 import { Component } from '@angular/core';
 import * as moment from 'moment';
 
@@ -8,7 +9,7 @@ import * as moment from 'moment';
 })
 export class AppComponent {
 
-  public data = [
+  public data: Abcence[] = [
     {
       start: moment(new Date("Sat Dec 03 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
       end: moment(new Date("Sat Dec 04 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное ремя)")),
