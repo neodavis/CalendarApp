@@ -54,7 +54,6 @@ export class CalendarComponent {
 
   getDateDetails(day: Day) {
     this.current = day;
-    console.log(this.current);
   }
 
   ngOnInit() {
