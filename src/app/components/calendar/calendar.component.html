@@ -1,0 +1,61 @@
+<div class="container">
+  <mat-card class="calendar-body">
+    <ul class="calendar-control">
+      <li class="control-prev">
+        <button mat-raised-button color="primary" (click)="prevMonth()">
+          <</button> </li> <li class="control-month">{{ dateService.date | async | dateFormat | titlecase }}</li>
+      <li class="control-next">
+        <button mat-raised-button color="primary" (click)="nextMonth()">></button>
+      </li>
+    </ul>
+    <table class="calendar-table">
+      <thead class="table-head">
+        <tr class="table-head__row">
+          <th class="table-head__cell">Понеділок</th>
+          <th class="table-head__cell">Вівторок</th>
+          <th class="table-head__cell">Середа</th>
+          <th class="table-head__cell">Четвер</th>
+          <th class="table-head__cell">П'ятниця</th>
+          <th class="table-head__cell">Субота</th>
+          <th class="table-head__cell">Неділя</th>
+        </tr>
+      </thead>
+      <tbody class="table-body">
+        <tr *ngFor="let week of calendar" class="table-body__row">
+          <td *ngFor="let day of week.days" class="table-body__cell"
+            [ngClass]="{'disabled': day.disabled, 'today': day.current}" (click)="getDateDetails(day)">
+            <span>{{ day.value.format("DD")}}</span>
+            <ul class="abcense-list" *ngIf="day.abcence.length">
+              <li *ngFor="let item of day.abcence" class="abcense-list__item">Тип: {{ item.type }}</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card>
+
+  <div class="details-container">
+    <ul class="details-list">
+      <li>
+        <h3>Деталі:</h3>
+      </li>
+      <ul>
+        <li>Дата: {{ current.value.format("LL") }}</li>
+        <mat-card *ngFor="let item of current.abcence" class="details-card">
+          <ul class="abcence-list">
+            <li class="abcence-list__item">Кінець: {{ item.end.format("LL")}}</li>
+            <li class="abcence-list__item">Причина: {{ item.type }}</li>
+            <li class="abcence-list__item">Коментар: {{ item.comment }}</li>
+          </ul>
+        </mat-card>
+
+        <li *ngIf="!current.abcence.length">
+          <mat-card class="details-card">
+            На эту дану немає запланованих відпусток
+          </mat-card>
+        </li>
+      </ul>
+    </ul>
+
+  </div>
+</div>

@@ -1,0 +1,18 @@
+.navigation {
+  background-color: #fff;
+  border-bottom: 1px solid black;
+}
+
+.nav-list {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100px;
+  list-style-type: none;
+  padding: 0;
+}
+
+.title {
+  margin: 0;
+}
