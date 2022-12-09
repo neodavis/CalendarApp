@@ -1,14 +1,14 @@
-<div class="container">
+<div class="container" *ngIf="!(isLoading$ | async)">
   <mat-card class="calendar-body">
     <ul class="calendar-control">
       <li class="control-prev">
         <button mat-raised-button color="primary" (click)="prevMonth()">
-          <</button> </li> <li class="control-month">{{ dateService.date | async | dateFormat | titlecase }}</li>
+          <</button> </li> <li class="control-month">{{ calendarService.date | async | dateFormat | titlecase }}</li>
       <li class="control-next">
         <button mat-raised-button color="primary" (click)="nextMonth()">></button>
       </li>
     </ul>
-    <table class="calendar-table">
+    <table class="calendar-table" >
       <thead class="table-head">
         <tr class="table-head__row">
           <th class="table-head__cell">Понеділок</th>
@@ -33,7 +33,7 @@
       </tbody>
     </table>
   </mat-card>
-
+  
   <div class="details-container">
     <ul class="details-list">
       <li>
@@ -56,6 +56,12 @@
         </li>
       </ul>
     </ul>
-
   </div>
 </div>
+
+<mat-progress-spinner
+  *ngIf="isLoading$ | async"
+  class="loading-spinner"
+  [color]="color"
+  [mode]="mode">
+</mat-progress-spinner>

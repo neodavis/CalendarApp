@@ -1,11 +1,19 @@
-import { Day } from '../../interfaces/day';
-import { Week } from '../../interfaces/week';
-import { Abcence } from '../../interfaces/abcence';
+import { AppState } from './../../shared/interfaces/app-state';
+import { CalendarService } from './../../shared/service/calendar.service';
+import { filter, Observable, of, take } from 'rxjs';
+import { AbcenceState } from 'src/app/shared/interfaces/abcence-state';
+import { Day } from '../../shared/interfaces/day';
+import { Week } from '../../shared/interfaces/week';
+import { Abcence } from '../../shared/interfaces/abcence';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import 'moment/locale/uk';
-import { DataService } from 'src/app/service/calendar.service';
+import { select, Store } from '@ngrx/store';
+import * as AbcenceActions from '../../shared/store/actions'
+import { ThemePalette } from '@angular/material/core';
+import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
+import { isLoadingSelector, abcenceSelector} from 'src/app/shared/store/selectors';
 
 @Component({
   selector: 'app-calendar',
@@ -13,21 +21,45 @@ import { DataService } from 'src/app/service/calendar.service';
   styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent {
-  @Input() data: Abcence[] = [];
-  constructor(public dialog: MatDialog, public dateService: DataService) {}
+  color: ThemePalette = 'primary';
+  mode: ProgressSpinnerMode = 'indeterminate';
+
+  public abcence$: Observable<Abcence[]>
+  public isLoading$: Observable<boolean>
+
+  constructor(public dialog: MatDialog, public calendarService: CalendarService, private store: Store<AppState>) {
+    this.isLoading$ = this.store.pipe(select(isLoadingSelector)),
+    this.abcence$ = this.store.pipe(select(abcenceSelector))
+  }
 
   public calendar: Week[];
   public current: Day;
 
+  subscribeOn() {
+    this.abcence$.subscribe(e => {
+      this.current = {
+        value: moment(),
+        disabled: false,
+        current: true,
+        abcence: e.filter((e: any) => {
+          return moment().isSame(e.start, 'day');
+        })
+      }
+      this.setCalendar(this.calendarService.date.value, e)
+   })
+  }
+
   nextMonth() {
-    this.dateService.changeMonth(1);
+    this.calendarService.changeMonth(1);
+    this.subscribeOn()
   }
 
   prevMonth() {
-    this.dateService.changeMonth(-1);
+    this.calendarService.changeMonth(-1);
+    this.subscribeOn()
   }
 
-  setCalendar(now: moment.Moment) {
+  setCalendar(now: moment.Moment, abcenceArray: Abcence[] = []) {
     let startOf = now.clone().startOf('month').startOf('week');
     let endOf = now.clone().endOf('month').endOf('week');
     let date = startOf.clone().subtract(1, 'day');
@@ -41,13 +73,13 @@ export class CalendarComponent {
             let value = date.add(1, 'day').clone();
             let disabled = !now.isSame(value, 'month');
             let current = moment().isSame(value, 'day');
-            let abcence: Abcence[] = this.data.filter((e: any) => {
+            let abcence: Abcence[] = abcenceArray.filter((e: any) => {
               return e.start.isSame(value, 'day');
             });
 
             return { value, current, disabled, abcence };
           }),
-      });
+        });
     }
     this.calendar = calendar;
   }
@@ -57,14 +89,8 @@ export class CalendarComponent {
   }
 
   ngOnInit() {
-    this.dateService.date.subscribe(this.setCalendar.bind(this));
-    this.current = {
-      value: moment(),
-      disabled: false,
-      current: true,
-      abcence: this.data.filter((e: any) => {
-        return moment().isSame(e.start, 'day');
-      }),
-    };
+    this.store.dispatch(AbcenceActions.getAbcence())
+    this.calendarService.date.subscribe(this.setCalendar.bind(this));
+    this.subscribeOn()
   }
 }
