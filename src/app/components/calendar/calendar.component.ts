@@ -41,7 +41,7 @@ export class CalendarComponent {
         value: moment(),
         disabled: false,
         current: true,
-        abcence: e.filter((e: any) => {
+        abcence: e.filter((e: Abcence) => {
           return moment().isSame(e.start, 'day');
         })
       }
@@ -73,7 +73,7 @@ export class CalendarComponent {
             let value = date.add(1, 'day').clone();
             let disabled = !now.isSame(value, 'month');
             let current = moment().isSame(value, 'day');
-            let abcence: Abcence[] = abcenceArray.filter((e: any) => {
+            let abcence: Abcence[] = abcenceArray.filter((e: Abcence) => {
               return e.start.isSame(value, 'day');
             });
 
