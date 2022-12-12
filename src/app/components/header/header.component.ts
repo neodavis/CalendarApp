@@ -1,6 +1,6 @@
 import { MatDialog } from '@angular/material/dialog';
 import { Component } from '@angular/core';
-import { SubmitComponent } from '../dialogs/submit/submit.component';
+import { CreationComponent } from '../dialogs/submit/creation.component';
 
 @Component({
   selector: 'app-header',
@@ -10,8 +10,12 @@ import { SubmitComponent } from '../dialogs/submit/submit.component';
 export class HeaderComponent {
   constructor(private dialog: MatDialog) {}
 
-  openDialog() {
-    this.dialog.open(SubmitComponent, {
+  openEditorDialog() {
+    
+  }
+
+  openCreationDialog() {
+    this.dialog.open(CreationComponent, {
       width: '500px',
     });
   }

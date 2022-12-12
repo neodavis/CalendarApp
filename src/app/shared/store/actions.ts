@@ -1,6 +1,9 @@
 import { createAction, props } from "@ngrx/store";
 import { Abcence } from "../interfaces/abcence";
 
-export const getAbcence = createAction('[Abcence] Get Abcence')
-export const getAbcenceSuccess = createAction('[Abcence] Get Success Abcence', props<{abcence: Abcence[]}>())
+export const getAbcence = createAction('[Abcence] Get Abcences');
+export const createAbcence = createAction('[Abcence] Create Abcence', props<{abcence: Abcence}>());
+export const editAbcence = createAction('[Abcence] Edit Abcence', props<{abcence: Abcence}>());
+export const deleteAbcence = createAction('[Abcence] Remove Abcence', props<{abcence: Abcence}>());
+
     

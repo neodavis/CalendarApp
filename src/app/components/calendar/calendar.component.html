@@ -1,4 +1,4 @@
-<div class="container" *ngIf="!(isLoading$ | async)">
+<div class="container">
   <mat-card class="calendar-body">
     <ul class="calendar-control">
       <li class="control-prev">
@@ -8,7 +8,7 @@
         <button mat-raised-button color="primary" (click)="nextMonth()">></button>
       </li>
     </ul>
-    <table class="calendar-table" >
+    <table class="calendar-table">
       <thead class="table-head">
         <tr class="table-head__row">
           <th class="table-head__cell">Понеділок</th>
@@ -43,9 +43,12 @@
         <li>Дата: {{ current.value.format("LL") }}</li>
         <mat-card *ngFor="let item of current.abcence" class="details-card">
           <ul class="abcence-list">
-            <li class="abcence-list__item">Кінець: {{ item.end.format("LL")}}</li>
+            <li class="abcence-list__item">Кінець: {{ item.end | dateFormat: "D MMMM YYYY р."}}</li>
             <li class="abcence-list__item">Причина: {{ item.type }}</li>
             <li class="abcence-list__item">Коментар: {{ item.comment }}</li>
+            <li class="abcence-list__delete">
+              <button mat-raised-button color="warn" (click)="deleteAbcence(item)">Видалити запис</button>
+            </li>
           </ul>
         </mat-card>
 
@@ -58,10 +61,3 @@
     </ul>
   </div>
 </div>
-
-<mat-progress-spinner
-  *ngIf="isLoading$ | async"
-  class="loading-spinner"
-  [color]="color"
-  [mode]="mode">
-</mat-progress-spinner>

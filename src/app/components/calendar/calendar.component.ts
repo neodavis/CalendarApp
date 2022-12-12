@@ -1,62 +1,45 @@
 import { AppState } from './../../shared/interfaces/app-state';
 import { CalendarService } from './../../shared/service/calendar.service';
-import { filter, Observable, of, take } from 'rxjs';
-import { AbcenceState } from 'src/app/shared/interfaces/abcence-state';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Day } from '../../shared/interfaces/day';
 import { Week } from '../../shared/interfaces/week';
 import { Abcence } from '../../shared/interfaces/abcence';
-import { Component, Input } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import 'moment/locale/uk';
 import { select, Store } from '@ngrx/store';
-import * as AbcenceActions from '../../shared/store/actions'
-import { ThemePalette } from '@angular/material/core';
-import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
-import { isLoadingSelector, abcenceSelector} from 'src/app/shared/store/selectors';
+import * as AbcenceActions from '../../shared/store/actions';
+import { abcenceSelector } from 'src/app/shared/store/selectors';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent {
-  color: ThemePalette = 'primary';
-  mode: ProgressSpinnerMode = 'indeterminate';
-
-  public abcence$: Observable<Abcence[]>
-  public isLoading$: Observable<boolean>
-
-  constructor(public dialog: MatDialog, public calendarService: CalendarService, private store: Store<AppState>) {
-    this.isLoading$ = this.store.pipe(select(isLoadingSelector)),
-    this.abcence$ = this.store.pipe(select(abcenceSelector))
+export class CalendarComponent implements OnInit, OnDestroy {
+  public abcences$: Observable<Abcence[]>;
+  notifier = new Subject()
+  constructor(
+    public dialog: MatDialog,
+    public calendarService: CalendarService,
+    private store: Store<AppState>
+  ) {
+    this.abcences$ = this.store.pipe(select(abcenceSelector));
   }
 
   public calendar: Week[];
   public current: Day;
-
-  subscribeOn() {
-    this.abcence$.subscribe(e => {
-      this.current = {
-        value: moment(),
-        disabled: false,
-        current: true,
-        abcence: e.filter((e: Abcence) => {
-          return moment().isSame(e.start, 'day');
-        })
-      }
-      this.setCalendar(this.calendarService.date.value, e)
-   })
-  }
+  public abcences: Abcence[];
 
   nextMonth() {
     this.calendarService.changeMonth(1);
-    this.subscribeOn()
+    this.setCalendar(this.calendarService.date.value, this.abcences);
   }
 
   prevMonth() {
     this.calendarService.changeMonth(-1);
-    this.subscribeOn()
+    this.setCalendar(this.calendarService.date.value, this.abcences);
   }
 
   setCalendar(now: moment.Moment, abcenceArray: Abcence[] = []) {
@@ -73,24 +56,51 @@ export class CalendarComponent {
             let value = date.add(1, 'day').clone();
             let disabled = !now.isSame(value, 'month');
             let current = moment().isSame(value, 'day');
-            let abcence: Abcence[] = abcenceArray.filter((e: Abcence) => {
-              return e.start.isSame(value, 'day');
+            let abcence: Abcence[] = abcenceArray.filter((abcence: Abcence) => {
+              return moment(abcence.start).isSame(value, 'day');
             });
 
             return { value, current, disabled, abcence };
           }),
-        });
+      });
     }
     this.calendar = calendar;
   }
 
   getDateDetails(day: Day) {
+    console.log(day);
     this.current = day;
   }
 
+  deleteAbcence(abcence: Abcence) {
+    this.store.dispatch(AbcenceActions.deleteAbcence({ abcence: abcence }));
+  }
+
   ngOnInit() {
-    this.store.dispatch(AbcenceActions.getAbcence())
+    this.store.dispatch(AbcenceActions.getAbcence());
     this.calendarService.date.subscribe(this.setCalendar.bind(this));
-    this.subscribeOn()
+
+    this.abcences$.pipe(takeUntil(this.notifier)).subscribe((abcences) => {
+      this.setCalendar(this.calendarService.date.value, abcences);
+      this.abcences = abcences
+      if (!this.current) {
+        this.current = {
+          value: moment(),
+          disabled: false,
+          current: true,
+          abcence: abcences.filter((abcence: Abcence) => {
+            return moment().isSame(abcence.start, 'day');
+          }),
+        };
+      } else {
+        this.current.abcence = abcences.filter((abcence: Abcence) => {
+          return this.current.value.isSame(abcence.start, 'day');
+        });
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.notifier.complete();
   }
 }

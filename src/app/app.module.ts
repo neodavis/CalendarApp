@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from 'src/material.module';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { SubmitComponent } from './components/dialogs/submit/submit.component';
+import { CreationComponent } from './components/dialogs/submit/creation.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import localeUk from '@angular/common/locales/uk';
 import { registerLocaleData } from '@angular/common';
@@ -12,11 +12,9 @@ import { MessageComponent } from './components/dialogs/message/message.component
 import { HeaderComponent } from './components/header/header.component';
 import { DateFormatPipe } from './shared/pipe/date-format';
 import { CalendarComponent } from './components/calendar/calendar.component';
-import { EffectsModule } from '@ngrx/effects';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './shared/store/reducers';
-import { AbcenceEffects } from './shared/store/effects';
 
 registerLocaleData(localeUk, 'uk');
 
@@ -24,7 +22,7 @@ registerLocaleData(localeUk, 'uk');
   declarations: [
     AppComponent,
     CalendarComponent,
-    SubmitComponent,
+    CreationComponent,
     MessageComponent,
     HeaderComponent,
     DateFormatPipe,
@@ -36,7 +34,7 @@ registerLocaleData(localeUk, 'uk');
     ReactiveFormsModule,
     FormsModule,
     StoreModule.forRoot(),
-    StoreModule.forFeature('abcence', reducers),
+    StoreModule.forFeature('abcences', reducers),
     // Instrumentation must be imported after importing StoreModule (config is optional)
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states
@@ -47,8 +45,6 @@ registerLocaleData(localeUk, 'uk');
     }),
     StoreModule.forRoot({}, {}),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
-    EffectsModule.forRoot(),
-    EffectsModule.forFeature([AbcenceEffects]),
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'uk' }],
   bootstrap: [AppComponent],

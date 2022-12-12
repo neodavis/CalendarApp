@@ -1,5 +1,5 @@
-import { AbcenceState } from "./abcence-state";
+import { AbcencesState } from "./abcences-state";
 
 export interface AppState {
-    abcence: AbcenceState
+    abcences: AbcencesState
 }

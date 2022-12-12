@@ -3,6 +3,9 @@
     <li class="nav-list__item">
       <h1 class="title">Календарне планування</h1>
     </li>
-    <li class="nav-list__item"><button mat-raised-button color="primary" (click)="openDialog()">Додати дату</button></li>
+    <ul class="nav-button__container">
+      <li class="edit-button"><button mat-raised-button color="accent" (click)="openEditorDialog()">Редагувати дату</button></li>
+      <li class="create-button"><button mat-raised-button color="primary" (click)="openCreationDialog()">Додати дату</button></li>
+    </ul>
   </ul>
 </nav>
