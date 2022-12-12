@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from 'src/material.module';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { CreationComponent } from './components/dialogs/submit/creation.component';
+import { CreationComponent } from './components/dialogs/creation/creation.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import localeUk from '@angular/common/locales/uk';
 import { registerLocaleData } from '@angular/common';
@@ -15,6 +15,7 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './shared/store/reducers';
+import { EditorComponent } from './components/dialogs/editor/editor.component';
 
 registerLocaleData(localeUk, 'uk');
 
@@ -26,6 +27,7 @@ registerLocaleData(localeUk, 'uk');
     MessageComponent,
     HeaderComponent,
     DateFormatPipe,
+    EditorComponent,
   ],
   imports: [
     BrowserModule,

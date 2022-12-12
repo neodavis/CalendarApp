@@ -63,6 +63,9 @@ export const reducers = createReducer(initialState,
     on(AbcanceActions.createAbcence, (state: AbcencesState, action) => {
         return {...state, abcences: [...state.abcences, action.abcence]};
     }),
+    on(AbcanceActions.editAbcence, (state: AbcencesState, action) => {
+        return {...state, abcences: [...state.abcences.filter((abcence: Abcence) => abcence.id != action.abcence.id), action.abcence]}
+    }),
     on(AbcanceActions.deleteAbcence, (state: AbcencesState, action) => {
         return {...state, abcences: [...state.abcences.filter((abcence: Abcence) => abcence.id != action.abcence.id)]};
     })

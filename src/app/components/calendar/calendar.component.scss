@@ -84,8 +84,12 @@
     padding: 20px;
   }
   
-  .abcence-list__delete {
+  .abcence-list__buttons {
     margin-top: 20px;
+
+    .edit-button {
+      margin-right: 20px;
+    }
   }
 }
 .loading-spinner {

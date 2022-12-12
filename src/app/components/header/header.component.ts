@@ -1,6 +1,6 @@
 import { MatDialog } from '@angular/material/dialog';
 import { Component } from '@angular/core';
-import { CreationComponent } from '../dialogs/submit/creation.component';
+import { CreationComponent } from '../dialogs/creation/creation.component';
 
 @Component({
   selector: 'app-header',
@@ -9,10 +9,6 @@ import { CreationComponent } from '../dialogs/submit/creation.component';
 })
 export class HeaderComponent {
   constructor(private dialog: MatDialog) {}
-
-  openEditorDialog() {
-    
-  }
 
   openCreationDialog() {
     this.dialog.open(CreationComponent, {

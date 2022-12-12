@@ -11,6 +11,7 @@ import 'moment/locale/uk';
 import { select, Store } from '@ngrx/store';
 import * as AbcenceActions from '../../shared/store/actions';
 import { abcenceSelector } from 'src/app/shared/store/selectors';
+import { EditorComponent } from '../dialogs/editor/editor.component';
 
 @Component({
   selector: 'app-calendar',
@@ -68,12 +69,20 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   getDateDetails(day: Day) {
-    console.log(day);
     this.current = day;
   }
 
   deleteAbcence(abcence: Abcence) {
     this.store.dispatch(AbcenceActions.deleteAbcence({ abcence: abcence }));
+  }
+  
+  openEditorDialog(abcence: Abcence) {
+    this.dialog.open(EditorComponent, {
+      data: {
+        abcence: abcence
+      },
+      width: '500px',
+    })
   }
 
   ngOnInit() {
