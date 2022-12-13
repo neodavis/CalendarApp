@@ -48,7 +48,7 @@
             <li class="abcence-list__item">Коментар: {{ item.comment }}</li>
             <li class="abcence-list__buttons">
               <button class="edit-button" mat-raised-button color="accent" (click)="openEditorDialog(item)">Редагувати дату</button>
-              <button class="delete-button" mat-raised-button color="warn" (click)="deleteAbcence(item)">Видалити запис</button>
+              <button class="delete-button" mat-raised-button color="warn" (click)="deleteAbcence(item.id)">Видалити запис</button>
             </li>
           </ul>
         </mat-card>

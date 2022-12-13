@@ -1,3 +1,4 @@
+import { props } from '@ngrx/store';
 import { Abcence } from './../interfaces/abcence';
 import { AbcencesState } from '../interfaces/abcences-state';
 import { createReducer, on } from '@ngrx/store';
@@ -60,13 +61,15 @@ export const initialState: AbcencesState = {
 
 export const reducers = createReducer(initialState, 
     on(AbcanceActions.getAbcence, (state: AbcencesState) => { return {...state}; }),
-    on(AbcanceActions.createAbcence, (state: AbcencesState, action) => {
+    on(AbcanceActions.createAbcences, (state: AbcencesState, action) => {
         return {...state, abcences: [...state.abcences, action.abcence]};
     }),
-    on(AbcanceActions.editAbcence, (state: AbcencesState, action) => {
-        return {...state, abcences: [...state.abcences.filter((abcence: Abcence) => abcence.id != action.abcence.id), action.abcence]}
+    on(AbcanceActions.editAbcence, (state: AbcencesState, action: {abcence: Abcence}) => {
+        return {...state, abcences: [...state.abcences.map((abcence: Abcence) => {
+          return (abcence.id === action.abcence.id) ? action.abcence : abcence;
+        })]}
     }),
-    on(AbcanceActions.deleteAbcence, (state: AbcencesState, action) => {
-        return {...state, abcences: [...state.abcences.filter((abcence: Abcence) => abcence.id != action.abcence.id)]};
+    on(AbcanceActions.deleteAbcence, (state: AbcencesState, action: {id: number}) => {
+        return {...state, abcences: [...state.abcences.filter((abcence: Abcence) => abcence.id !== action.id)]};
     })
 )

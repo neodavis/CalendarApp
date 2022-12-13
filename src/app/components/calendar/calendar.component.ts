@@ -72,8 +72,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.current = day;
   }
 
-  deleteAbcence(abcence: Abcence) {
-    this.store.dispatch(AbcenceActions.deleteAbcence({ abcence: abcence }));
+  deleteAbcence(id: number) {
+    this.store.dispatch(AbcenceActions.deleteAbcence({ id: id }));
   }
   
   openEditorDialog(abcence: Abcence) {
@@ -87,7 +87,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.store.dispatch(AbcenceActions.getAbcence());
-    this.calendarService.date.subscribe(this.setCalendar.bind(this));
+    this.calendarService.date.pipe(takeUntil(this.notifier)).subscribe(this.setCalendar.bind(this));
 
     this.abcences$.pipe(takeUntil(this.notifier)).subscribe((abcences) => {
       this.setCalendar(this.calendarService.date.value, abcences);

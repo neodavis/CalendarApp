@@ -62,9 +62,6 @@ export class EditorComponent {
       });
     }
   }
-  ngOnInit() {
-    console.log(this.data)
-  }
   public close() {
     this.dialogRef.close();
   }
