@@ -60,8 +60,8 @@ export const initialState: AbcencesState = {
 };
 
 export const reducers = createReducer(initialState, 
-    on(AbcanceActions.getAbcence, (state: AbcencesState) => { return {...state}; }),
-    on(AbcanceActions.createAbcences, (state: AbcencesState, action) => {
+    on(AbcanceActions.getAbcences, (state: AbcencesState) => { return {...state}; }),
+    on(AbcanceActions.createAbcence, (state: AbcencesState, action) => {
         return {...state, abcences: [...state.abcences, action.abcence]};
     }),
     on(AbcanceActions.editAbcence, (state: AbcencesState, action: {abcence: Abcence}) => {

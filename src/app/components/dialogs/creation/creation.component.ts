@@ -59,7 +59,7 @@ export class CreationComponent {
         type: this.group.value.typeControl,
         comment: this.group.value.commentControl
       };
-      this.store.dispatch(AbcenceActions.createAbcences({abcence: this.result}))
+      this.store.dispatch(AbcenceActions.createAbcence({abcence: this.result}))
       this.dialogRef.close();
       this.successDialog.open(MessageComponent, {
         data: {

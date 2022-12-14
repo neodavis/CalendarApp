@@ -86,7 +86,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.store.dispatch(AbcenceActions.getAbcence());
+    this.store.dispatch(AbcenceActions.getAbcences());
     this.calendarService.date.pipe(takeUntil(this.notifier)).subscribe(this.setCalendar.bind(this));
 
     this.abcences$.pipe(takeUntil(this.notifier)).subscribe((abcences) => {
