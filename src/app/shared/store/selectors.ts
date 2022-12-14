@@ -1,6 +1,6 @@
 import { createSelector } from "@ngrx/store";
 import { AppState } from "../interfaces/app-state";
 
-export const selectFeature = (state: AppState) => state.abcences;
+export const selectFeature = (state: AppState) => state.absences;
 
-export const abcenceSelector = createSelector(selectFeature, (state) => state.abcences);
+export const absenceSelector = createSelector(selectFeature, (state) => state.absences);

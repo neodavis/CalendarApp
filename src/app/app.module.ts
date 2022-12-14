@@ -36,7 +36,7 @@ registerLocaleData(localeUk, 'uk');
     ReactiveFormsModule,
     FormsModule,
     StoreModule.forRoot(),
-    StoreModule.forFeature('abcences', reducers),
+    StoreModule.forFeature('absences', reducers),
     // Instrumentation must be imported after importing StoreModule (config is optional)
     StoreDevtoolsModule.instrument({
       maxAge: 25, // Retains last 25 states

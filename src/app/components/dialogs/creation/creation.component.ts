@@ -1,4 +1,4 @@
-import { Abcence } from '../../../shared/interfaces/abcence';
+import { Absence } from '../../../shared/interfaces/absence';
 import { AppState } from '../../../shared/interfaces/app-state';
 import { Store } from '@ngrx/store';
 import {
@@ -13,7 +13,7 @@ import { Component, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MessageComponent } from '../message/message.component';
 import * as moment from 'moment';
-import * as AbcenceActions from '../../../shared/store/actions'
+import * as AbsenceActions from '../../../shared/store/actions'
 
 export const dateValidator: ValidatorFn = (
   control: AbstractControl
@@ -48,7 +48,7 @@ export class CreationComponent {
     commentControl: new FormControl(''),
   });
 
-  public result: Abcence;
+  public result: Absence;
 
   public submit() {
     if (this.group.valid) {
@@ -59,7 +59,7 @@ export class CreationComponent {
         type: this.group.value.typeControl,
         comment: this.group.value.commentControl
       };
-      this.store.dispatch(AbcenceActions.createAbcence({abcence: this.result}))
+      this.store.dispatch(AbsenceActions.createAbsence({absence: this.result}))
       this.dialogRef.close();
       this.successDialog.open(MessageComponent, {
         data: {

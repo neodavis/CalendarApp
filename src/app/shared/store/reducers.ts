@@ -1,12 +1,12 @@
 import { props } from '@ngrx/store';
-import { Abcence } from './../interfaces/abcence';
-import { AbcencesState } from '../interfaces/abcences-state';
+import { Absence } from './../interfaces/absence';
+import { AbsencesState } from '../interfaces/absences-state';
 import { createReducer, on } from '@ngrx/store';
 import * as AbcanceActions from './actions'
 import * as moment from 'moment';
 
-export const initialState: AbcencesState = {
-    abcences: [
+export const initialState: AbsencesState = {
+    absences: [
         {
           id: 1,
           start: moment(new Date("Sat Dec 03 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
@@ -60,16 +60,16 @@ export const initialState: AbcencesState = {
 };
 
 export const reducers = createReducer(initialState, 
-    on(AbcanceActions.getAbcences, (state: AbcencesState) => { return {...state}; }),
-    on(AbcanceActions.createAbcence, (state: AbcencesState, action) => {
-        return {...state, abcences: [...state.abcences, action.abcence]};
+    on(AbcanceActions.getAbsences, (state: AbsencesState) => { return {...state}; }),
+    on(AbcanceActions.createAbsence, (state: AbsencesState, action) => {
+        return {...state, absences: [...state.absences, action.absence]};
     }),
-    on(AbcanceActions.editAbcence, (state: AbcencesState, action: {abcence: Abcence}) => {
-        return {...state, abcences: [...state.abcences.map((abcence: Abcence) => {
-          return (abcence.id === action.abcence.id) ? action.abcence : abcence;
+    on(AbcanceActions.editAbsence, (state: AbsencesState, action: {absence: Absence}) => {
+        return {...state, absences: [...state.absences.map((absence: Absence) => {
+          return (absence.id === action.absence.id) ? action.absence : absence;
         })]}
     }),
-    on(AbcanceActions.deleteAbcence, (state: AbcencesState, action: {id: number}) => {
-        return {...state, abcences: [...state.abcences.filter((abcence: Abcence) => abcence.id !== action.id)]};
+    on(AbcanceActions.deleteAbsence, (state: AbsencesState, action: {id: number}) => {
+        return {...state, absences: [...state.absences.filter((absence: Absence) => absence.id !== action.id)]};
     })
 )

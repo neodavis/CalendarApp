@@ -3,10 +3,10 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn,
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import * as moment from 'moment';
-import { Abcence } from 'src/app/shared/interfaces/abcence';
+import { Absence } from 'src/app/shared/interfaces/absence';
 import { AppState } from 'src/app/shared/interfaces/app-state';
 import { MessageComponent } from '../message/message.component';
-import * as AbcenceActions from '../../../shared/store/actions'
+import * as AbsenceActions from '../../../shared/store/actions'
 
 export const dateValidator: ValidatorFn = (
   control: AbstractControl
@@ -36,23 +36,23 @@ export class EditorComponent {
   ) {}
 
   public group: FormGroup = new FormGroup({
-    typeControl: new FormControl(this.data.abcence.type, [Validators.required]),
-    startControl: new FormControl(moment(this.data.abcence.start).toDate(), [Validators.required, dateValidator]),
-    endControl: new FormControl(moment(this.data.abcence.end).toDate(), [Validators.required, dateValidator]),
-    commentControl: new FormControl(this.data.abcence.comment),
+    typeControl: new FormControl(this.data.absence.type, [Validators.required]),
+    startControl: new FormControl(moment(this.data.absence.start).toDate(), [Validators.required, dateValidator]),
+    endControl: new FormControl(moment(this.data.absence.end).toDate(), [Validators.required, dateValidator]),
+    commentControl: new FormControl(this.data.absence.comment),
   });
-  public result: Abcence;
+  public result: Absence;
 
   public submit() {
     if (this.group.valid) {
       this.result = { 
-        id: this.data.abcence.id,
+        id: this.data.absence.id,
         start: this.group.value.startControl,
         end: this.group.value.endControl,
         type: this.group.value.typeControl,
         comment: this.group.value.commentControl
       };
-      this.store.dispatch(AbcenceActions.editAbcence({abcence: this.result}))
+      this.store.dispatch(AbsenceActions.editAbsence({absence: this.result}))
       this.dialogRef.close();
       this.successDialog.open(MessageComponent, {
         data: {
