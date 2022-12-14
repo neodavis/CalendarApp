@@ -1,33 +1,49 @@
-import { Day } from '../../interfaces/day';
-import { Week } from '../../interfaces/week';
-import { Abcence } from '../../interfaces/abcence';
-import { Component, Input } from '@angular/core';
+import { AppState } from './../../shared/interfaces/app-state';
+import { CalendarService } from './../../shared/service/calendar.service';
+import { Observable, Subject, takeUntil } from 'rxjs';
+import { Day } from '../../shared/interfaces/day';
+import { Week } from '../../shared/interfaces/week';
+import { Absence } from '../../shared/interfaces/absence';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';
 import 'moment/locale/uk';
-import { DataService } from 'src/app/service/calendar.service';
+import { select, Store } from '@ngrx/store';
+import * as AbsenceActions from '../../shared/store/actions';
+import { absenceSelector } from 'src/app/shared/store/selectors';
+import { EditorComponent } from '../dialogs/editor/editor.component';
 
 @Component({
   selector: 'app-calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent {
-  @Input() data: Abcence[] = [];
-  constructor(public dialog: MatDialog, public dateService: DataService) {}
+export class CalendarComponent implements OnInit, OnDestroy {
+  public absences$: Observable<Absence[]>;
+  notifier = new Subject()
+  constructor(
+    public dialog: MatDialog,
+    public calendarService: CalendarService,
+    private store: Store<AppState>
+  ) {
+    this.absences$ = this.store.pipe(select(absenceSelector));
+  }
 
   public calendar: Week[];
   public current: Day;
+  public absences: Absence[];
 
   nextMonth() {
-    this.dateService.changeMonth(1);
+    this.calendarService.changeMonth(1);
+    this.setCalendar(this.calendarService.date.value, this.absences);
   }
 
   prevMonth() {
-    this.dateService.changeMonth(-1);
+    this.calendarService.changeMonth(-1);
+    this.setCalendar(this.calendarService.date.value, this.absences);
   }
 
-  setCalendar(now: moment.Moment) {
+  setCalendar(now: moment.Moment, absenceArray: Absence[] = []) {
     let startOf = now.clone().startOf('month').startOf('week');
     let endOf = now.clone().endOf('month').endOf('week');
     let date = startOf.clone().subtract(1, 'day');
@@ -41,11 +57,11 @@ export class CalendarComponent {
             let value = date.add(1, 'day').clone();
             let disabled = !now.isSame(value, 'month');
             let current = moment().isSame(value, 'day');
-            let abcence: Abcence[] = this.data.filter((e: any) => {
-              return e.start.isSame(value, 'day');
+            let absence: Absence[] = absenceArray.filter((absence: Absence) => {
+              return moment(absence.start).isSame(value, 'day');
             });
 
-            return { value, current, disabled, abcence };
+            return { value, current, disabled, absence };
           }),
       });
     }
@@ -56,15 +72,44 @@ export class CalendarComponent {
     this.current = day;
   }
 
+  deleteAbsence(id: number) {
+    this.store.dispatch(AbsenceActions.deleteAbsence({ id: id }));
+  }
+  
+  openEditorDialog(absence: Absence) {
+    this.dialog.open(EditorComponent, {
+      data: {
+        absence: absence
+      },
+      width: '500px',
+    })
+  }
+
   ngOnInit() {
-    this.dateService.date.subscribe(this.setCalendar.bind(this));
-    this.current = {
-      value: moment(),
-      disabled: false,
-      current: true,
-      abcence: this.data.filter((e: any) => {
-        return moment().isSame(e.start, 'day');
-      }),
-    };
+    this.store.dispatch(AbsenceActions.getAbsences());
+    this.calendarService.date.pipe(takeUntil(this.notifier)).subscribe(this.setCalendar.bind(this));
+
+    this.absences$.pipe(takeUntil(this.notifier)).subscribe((absences) => {
+      this.setCalendar(this.calendarService.date.value, absences);
+      this.absences = absences
+      if (!this.current) {
+        this.current = {
+          value: moment(),
+          disabled: false,
+          current: true,
+          absence: absences.filter((absence: Absence) => {
+            return moment().isSame(absence.start, 'day');
+          }),
+        };
+      } else {
+        this.current.absence = absences.filter((absence: Absence) => {
+          return this.current.value.isSame(absence.start, 'day');
+        });
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.notifier.complete();
   }
 }

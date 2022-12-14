@@ -11,6 +11,10 @@
   height: 100px;
   list-style-type: none;
   padding: 0;
+
+  .nav-button__container {
+    display: flex;
+  }
 }
 
 .title {
