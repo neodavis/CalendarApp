@@ -11,13 +11,15 @@ import * as AbsenceActions from '../../../shared/store/actions'
 export const dateValidator: ValidatorFn = (
   control: AbstractControl
 ): ValidationErrors | null => {
-  let start: any = control.parent?.get('startControl');
+  let start: AbstractControl<any> | null | undefined = control.parent?.get('startControl');
   let end: any = control.parent?.get('endControl');
 
   if (start && moment(start.value).isAfter(moment(end.value))) {
     return { dateError: 'start is greater than end' };
   }
 
+  start?.setErrors(null)
+  end?.setErrors(null)
   return null;
 };
 
