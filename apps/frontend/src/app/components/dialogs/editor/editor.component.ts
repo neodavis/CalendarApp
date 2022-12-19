@@ -14,7 +14,7 @@ import {
 } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
 import * as moment from 'moment';
-import { Absence } from 'libs/api-interfaces/absence';
+import { Absence } from '../../../shared/interfaces/absence';
 import { AppState } from '../../../shared/interfaces/app-state';
 import { MessageComponent } from '../message/message.component';
 import * as AbsenceActions from '../../../shared/store/actions';

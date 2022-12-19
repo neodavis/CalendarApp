@@ -1,4 +1,4 @@
-import { Absence } from 'libs/api-interfaces/absence';
+import { Absence } from '../../../shared/interfaces/absence';
 import { AppState } from '../../../shared/interfaces/app-state';
 import { select, Store } from '@ngrx/store';
 import {

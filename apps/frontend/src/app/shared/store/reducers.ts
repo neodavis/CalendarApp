@@ -1,4 +1,4 @@
-import { Absence } from 'libs/api-interfaces/absence';
+import { Absence } from '../interfaces/absence';
 import { AbsencesState } from '../interfaces/absences-state';
 import { createReducer, on } from '@ngrx/store';
 import * as AbcanceActions from './actions';

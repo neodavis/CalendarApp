@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Absence } from 'libs/api-interfaces/absence';
+import { Absence } from '../interfaces/absence';
 
 export const getAbsences = createAction('[Absence] Get Absences');
 export const getAbsencesSuccess = createAction(

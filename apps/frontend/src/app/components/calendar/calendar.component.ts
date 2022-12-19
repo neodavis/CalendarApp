@@ -4,7 +4,7 @@ import { CalendarService } from './../../shared/service/calendar.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { Day } from '../../shared/interfaces/day';
 import { Week } from '../../shared/interfaces/week';
-import { Absence } from 'libs/api-interfaces/absence';
+import { Absence } from '../../shared/interfaces/absence';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import * as moment from 'moment';

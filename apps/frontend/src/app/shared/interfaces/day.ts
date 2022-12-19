@@ -1,4 +1,4 @@
-import { Absence } from 'libs/api-interfaces/absence';
+import { Absence } from './absence';
 import * as moment from 'moment';
 
 export interface Day {

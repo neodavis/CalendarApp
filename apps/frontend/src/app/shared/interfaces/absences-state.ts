@@ -1,4 +1,4 @@
-import { Absence } from 'libs/api-interfaces/absence';
+import { Absence } from './absence';
 
 export interface AbsencesState {
   absences: Absence[];

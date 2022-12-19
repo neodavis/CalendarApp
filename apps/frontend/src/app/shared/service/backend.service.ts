@@ -1,4 +1,4 @@
-import { Absence } from 'libs/api-interfaces/absence';
+import { Absence } from '../interfaces/absence';
 import { delay, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';

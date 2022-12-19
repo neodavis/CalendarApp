@@ -1,4 +1,4 @@
-import { Absence } from 'libs/api-interfaces/absence';
+import { Absence } from './absence';
 import { Injectable } from '@nestjs/common';
 import moment = require('moment');
 
