@@ -12,4 +12,7 @@ export class CalendarService {
     let value = this.date.value.add(val, 'month');
     this.date.next(value);
   }
+  setToMonthCurrent() {
+    this.date.value.set({'year': moment().year(), 'month': moment().month()})
+  }
 }

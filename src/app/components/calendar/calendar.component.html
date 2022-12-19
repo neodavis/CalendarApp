@@ -7,6 +7,9 @@
       <li class="control-next">
         <button mat-raised-button color="primary" (click)="nextMonth()">></button>
       </li>
+      <li class="control-today">
+        <button mat-raised-button color="accent" (click)="currentMonth()">Сьогодні</button>
+      </li>
     </ul>
     <table class="calendar-table">
       <thead class="table-head">
@@ -26,14 +29,15 @@
             [ngClass]="{'disabled': day.disabled, 'today': day.current}" (click)="getDateDetails(day)">
             <span>{{ day.value.format("DD")}}</span>
             <ul class="abcense-list" *ngIf="day.absence.length">
-              <li *ngFor="let item of day.absence" class="abcense-list__item">Тип: {{ item.type }}</li>
+              <li *ngFor="let item of day.absence" class="abcense-list__item" (click)="openEditorDialog(item)"
+                [ngStyle]="{'background-color': absenceToColor(item)}">Тип: {{ item.type }}</li>
             </ul>
           </td>
         </tr>
       </tbody>
     </table>
   </mat-card>
-  
+
   <div class="details-container">
     <ul class="details-list">
       <li>
@@ -41,14 +45,15 @@
       </li>
       <ul>
         <li>Дата: {{ current.value.format("LL") }}</li>
-        <mat-card *ngFor="let item of current.absence" class="details-card">
+        <mat-card *ngFor="let item of current.absence" class="details-card"
+          [ngStyle]="{'background-color': absenceToColor(item)}">
           <ul class="absence-list">
             <li class="absence-list__item">Кінець: {{ item.end | dateFormat: "D MMMM YYYY р."}}</li>
             <li class="absence-list__item">Причина: {{ item.type }}</li>
             <li class="absence-list__item">Коментар: {{ item.comment }}</li>
             <li class="absence-list__buttons">
-              <button class="edit-button" mat-raised-button color="accent" (click)="openEditorDialog(item)">Редагувати дату</button>
-              <button class="delete-button" mat-raised-button color="warn" (click)="deleteAbsence(item.id)">Видалити запис</button>
+              <button class="delete-button" mat-raised-button color="warn" (click)="deleteAbsence(item.id)">Видалити
+                запис</button>
             </li>
           </ul>
         </mat-card>

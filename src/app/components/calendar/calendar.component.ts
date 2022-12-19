@@ -21,6 +21,10 @@ import { EditorComponent } from '../dialogs/editor/editor.component';
 export class CalendarComponent implements OnInit, OnDestroy {
   public absences$: Observable<Absence[]>;
   notifier = new Subject()
+  public calendar: Week[];
+  public current: Day;
+  public absences: Absence[];
+
   constructor(
     public dialog: MatDialog,
     public calendarService: CalendarService,
@@ -29,9 +33,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.absences$ = this.store.pipe(select(absenceSelector));
   }
 
-  public calendar: Week[];
-  public current: Day;
-  public absences: Absence[];
 
   nextMonth() {
     this.calendarService.changeMonth(1);
@@ -40,6 +41,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   prevMonth() {
     this.calendarService.changeMonth(-1);
+    this.setCalendar(this.calendarService.date.value, this.absences);
+  }
+  currentMonth() {
+    this.calendarService.setToMonthCurrent() 
     this.setCalendar(this.calendarService.date.value, this.absences);
   }
 
@@ -58,7 +63,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
             let disabled = !now.isSame(value, 'month');
             let current = moment().isSame(value, 'day');
             let absence: Absence[] = absenceArray.filter((absence: Absence) => {
-              return moment(absence.start).isSame(value, 'day');
+              return value.isBetween(moment(absence.start), moment(absence.end), 'day', "[]");
             });
 
             return { value, current, disabled, absence };
@@ -67,7 +72,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
     }
     this.calendar = calendar;
   }
-
+  absenceToColor(absense: Absence) {
+    
+    let color = (moment(absense.start).unix() * moment(absense.end).unix() / absense.id).toString(16).slice(0, 6);
+    return `#${color}`;
+  }
   getDateDetails(day: Day) {
     this.current = day;
   }

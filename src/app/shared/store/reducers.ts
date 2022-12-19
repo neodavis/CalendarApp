@@ -9,54 +9,18 @@ export const initialState: AbsencesState = {
     absences: [
         {
           id: 1,
-          start: moment(new Date("Sat Dec 03 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          end: moment(new Date("Sat Dec 04 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное ремя)")),
+          start: moment("Sat Dec 03 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)"),
+          end: moment("Sat Dec 10 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное ремя)"),
           type: "Відпустка",
           comment: "Lorem Ipsum1",
         },
         {
-          id: 2,
-          start: moment(new Date("Sun Dec 03 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          end: moment(new Date("Sun Dec 04 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
+          id: 1671203037078,
+          start: moment("Wed Dec 14 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)"),
+          end: moment("Wed Dec 21 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)"),
           type: "Лікарняний",
-          comment: "Lorem Ipsum2",
-        },
-        {
-          id: 3,
-          start: moment(new Date("Mon Dec 27 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          end: moment(new Date("Sun Dec 28 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          type: "Лікарняний",
-          comment: "Lorem Ipsum2",
-        },
-        {
-          id: 4,
-          start: moment(new Date("Mon Dec 27 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          end: moment(new Date("Sun Dec 28 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          type: "Лікарняний",
-          comment: "Lorem Ipsum2",
-        },
-        {
-          id: 5,
-          start: moment(new Date("Mon Dec 27 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          end: moment(new Date("Sun Dec 28 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          type: "Лікарняний",
-          comment: "Lorem Ipsum2",
-        },
-        {
-          id: 6,
-          start: moment(new Date("Tue Dec 06 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          end: moment(new Date("Tue Dec 07 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          type: "Відпустка",
-          comment: "Lorem Ipsum3",
-        },
-        {
-          id: 7,
-          start: moment(new Date("Fri Dec 09 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          end: moment(new Date("Fri Dec 09 2022 00:00:00 GMT+0200 (Восточная Европа, стандартное время)")),
-          type: "Лікарняний",
-          comment: "Lorem Ipsum4",
-        }
-      ],
+          comment: "123123",
+        }],
 };
 
 export const reducers = createReducer(initialState, 
