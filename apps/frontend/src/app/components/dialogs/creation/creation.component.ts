@@ -21,13 +21,9 @@ import * as AbsenceActions from '../../../shared/store/actions';
 import { absenceSelector } from '../../../shared/store/selectors';
 import { Observable, takeUntil, Subject } from 'rxjs';
 
-export const dateValidator: ValidatorFn = (
-  control: AbstractControl
-): ValidationErrors | null => {
-  let start: AbstractControl | null | undefined =
-    control.parent?.get('startControl');
-  let end: AbstractControl | null | undefined =
-    control.parent?.get('endControl');
+export const dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  let start: AbstractControl | null | undefined = control.parent?.get('startControl');
+  let end: AbstractControl | null | undefined = control.parent?.get('endControl');
 
   if (start && end && moment(start.value).isAfter(moment(end.value))) {
     return { dateError: 'start is greater than end' };
@@ -45,16 +41,15 @@ export const dateValidator: ValidatorFn = (
   styleUrls: ['./creation.component.scss'],
 })
 export class CreationComponent implements OnInit {
-  public absences$: Observable<Absence[]>;
-  public busyDates: Set<any> = new Set();
+  private absences$: Observable<Absence[]>;
+  private result: Absence;
+  private busyDates: Set<string> = new Set();
   private notifier = new Subject();
-  public result: Absence;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<CreationComponent>,
-    public successDialog: MatDialog,
-    public store: Store<AppState>
+    private dialogRef: MatDialogRef<CreationComponent>,
+    private successDialog: MatDialog,
+    private store: Store<AppState>
   ) {
     this.absences$ = this.store.pipe(select(absenceSelector));
   }
@@ -68,15 +63,8 @@ export class CreationComponent implements OnInit {
 
   public submit() {
     let isBusy = false;
-    this.busyDates.forEach((date) => {
-      if (
-        moment(date).isBetween(
-          moment(this.group.value.startControl),
-          moment(this.group.value.endControl),
-          'day',
-          '[]'
-        )
-      ) {
+    this.busyDates.forEach((date: string) => {
+      if (moment(date).isBetween( moment(this.group.value.startControl), moment(this.group.value.endControl), 'day', '[]')) {
         isBusy = true;
         return false;
       }
@@ -92,9 +80,7 @@ export class CreationComponent implements OnInit {
           comment: this.group.value.commentControl,
         };
 
-        this.store.dispatch(
-          AbsenceActions.createAbsence({ absence: this.result })
-        );
+        this.store.dispatch(AbsenceActions.createAbsence({ absence: this.result }));
         this.dialogRef.close();
         this.successDialog.open(MessageComponent, {
           data: {
