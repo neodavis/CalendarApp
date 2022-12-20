@@ -5,5 +5,5 @@ export interface Day {
   value: moment.Moment;
   current: boolean;
   disabled: boolean;
-  absence: Absence[];
+  absence: Absence | undefined;
 }

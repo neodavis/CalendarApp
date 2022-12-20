@@ -22,10 +22,10 @@ import { EditorComponent } from '../dialogs/editor/editor.component';
 export class CalendarComponent implements OnInit, OnDestroy {
   public absences$: Observable<Absence[]>;
   public isLoading$: Observable<Boolean>;
-  notifier = new Subject();
   public calendar: Week[];
   public current: Day;
   public absences: Absence[];
+  public notifier = new Subject();
 
   constructor(
     public dialog: MatDialog,
@@ -34,53 +34,30 @@ export class CalendarComponent implements OnInit, OnDestroy {
   ) {
     this.absences$ = this.store.pipe(select(absenceSelector));
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
-   }
+  }
 
   nextMonth() {
     this.calendarService.changeMonth(1);
-    this.setCalendar(this.calendarService.date.value, this.absences);
+    this.calendar = this.calendarService.createCalendar(
+      this.absences
+    );
   }
 
   prevMonth() {
     this.calendarService.changeMonth(-1);
-    this.setCalendar(this.calendarService.date.value, this.absences);
+    this.calendar = this.calendarService.createCalendar(
+      this.absences
+    );
   }
   currentMonth() {
     this.calendarService.setToMonthCurrent();
-    this.setCalendar(this.calendarService.date.value, this.absences);
+    this.calendar = this.calendarService.createCalendar(
+      this.absences
+    );
   }
 
-  setCalendar(now: moment.Moment, absenceArray: Absence[] = []) {
-    let startOf = now.clone().startOf('month').startOf('week');
-    let endOf = now.clone().endOf('month').endOf('week');
-    let date = startOf.clone().subtract(1, 'day');
-    let calendar: Array<any> = [];
-
-    while (date.isBefore(endOf, 'day')) {
-      calendar.push({
-        days: Array(7)
-          .fill(0)
-          .map(() => {
-            let value = date.add(1, 'day').clone();
-            let disabled = !now.isSame(value, 'month');
-            let current = moment().isSame(value, 'day');
-            let absence: Absence[] = absenceArray.filter((absence: Absence) => {
-              return value.isBetween(
-                moment(absence.start),
-                moment(absence.end),
-                'day',
-                '[]'
-              );
-            });
-
-            return { value, current, disabled, absence };
-          }),
-      });
-    }
-    this.calendar = calendar;
-  }
   absenceToColor(absense: Absence) {
-    let color = (absense.id*5).toString(16).slice(0, 6);
+    let color = (absense.id * 5).toString(16).slice(0, 6);
     return `#${color}`;
   }
   getDateDetails(day: Day) {
@@ -102,24 +79,22 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.store.dispatch(AbsenceActions.getAbsences());
-    this.calendarService.date
-      .pipe(takeUntil(this.notifier))
-      .subscribe(this.setCalendar.bind(this));
-
     this.absences$.pipe(takeUntil(this.notifier)).subscribe((absences) => {
-      this.setCalendar(this.calendarService.date.value, absences);
+      this.calendar = this.calendarService.createCalendar(
+        absences
+      );
       this.absences = absences;
       if (!this.current) {
         this.current = {
           value: moment(),
           disabled: false,
           current: true,
-          absence: absences.filter((absence: Absence) => {
-            return moment().isSame(absence.start, 'day');
-          }),
+          absence: absences.find((absence: Absence) => {
+            return this.current.value.isSame(absence.start, 'day');
+          })
         };
       } else {
-        this.current.absence = absences.filter((absence: Absence) => {
+        this.current.absence = absences.find((absence: Absence) => {
           return this.current.value.isSame(absence.start, 'day');
         });
       }
