@@ -10,39 +10,39 @@ export const initialState: AbsencesState = {
 
 export const reducers = createReducer(
   initialState,
-  on(AbsenceActions.getAbsences, (state: AbsencesState) => {
+  on(AbsenceActions.getAbsences, (state: AbsencesState): AbsencesState => {
     return { ...state, isLoading: true };
   }),
-  on(AbsenceActions.getAbsencesSuccess, (state: AbsencesState, action: { absences: Absence[] }) => {
+  on(AbsenceActions.getAbsencesSuccess, (state: AbsencesState, action: { absences: Absence[] }): AbsencesState => {
     return {...state, absences: action.absences, isLoading: false}
   }),
 
 
-  on(AbsenceActions.createAbsence, (state: AbsencesState) => {
+  on(AbsenceActions.createAbsence, (state: AbsencesState): AbsencesState => {
     return { ...state, isLoading: true };
   }),
-  on(AbsenceActions.createAbsenceSuccess, (state: AbsencesState, action: { absences: Absence[] }) => {
+  on(AbsenceActions.createAbsenceSuccess, (state: AbsencesState, action: { absences: Absence[] }): AbsencesState => {
     return {...state, absences: [...action.absences], isLoading: false};
   }),
 
   on(
-    AbsenceActions.editAbsence, (state: AbsencesState) => {
+    AbsenceActions.editAbsence, (state: AbsencesState): AbsencesState => {
       return {...state, isLoading: true};
     }
   ),
   on(
-    AbsenceActions.editAbsenceSuccess, (state: AbsencesState, action: { absences: Absence[] }) => {
+    AbsenceActions.editAbsenceSuccess, (state: AbsencesState, action: { absences: Absence[] }): AbsencesState => {
       return {...state, absences: [...action.absences], isLoading: false};
     }
   ),
 
   on(
-    AbsenceActions.deleteAbsence, (state: AbsencesState) => { 
+    AbsenceActions.deleteAbsence, (state: AbsencesState): AbsencesState => { 
       return { ...state, isLoading: true} 
     }
   ),
   on(
-    AbsenceActions.deleteAbsenceSuccess, (state: AbsencesState, action: { absences: Absence[]}) => {
+    AbsenceActions.deleteAbsenceSuccess, (state: AbsencesState, action: { absences: Absence[]}): AbsencesState => {
       return { ...state, absences: [...action.absences], isLoading: false}
     }
   )

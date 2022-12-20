@@ -14,7 +14,7 @@ export const createAbsence = createAction(
 export const createAbsenceSuccess = createAction(
   '[Absence] Create Absence Success',
   props<{ absences: Absence[]} >()
-)
+);
 
 export const editAbsence = createAction(
   '[Absence] Edit Absence',
@@ -23,7 +23,7 @@ export const editAbsence = createAction(
 export const editAbsenceSuccess = createAction(
   '[Absence] Edit Absence Success',
   props<{ absences: Absence[] }>()
-)
+);
 
 export const deleteAbsence = createAction(
   '[Absence] Delete Absence',
@@ -32,4 +32,4 @@ export const deleteAbsence = createAction(
 export const deleteAbsenceSuccess = createAction(
   '[Absence] Delete Absence Success',
   props<{ absences: Absence[]}>()
-)
+);

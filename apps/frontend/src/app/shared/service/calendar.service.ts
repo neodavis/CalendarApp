@@ -2,22 +2,24 @@ import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { Absence } from '../interfaces/absence';
+import { Week } from '../interfaces/week';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CalendarService {
-  public date: BehaviorSubject<moment.Moment> = new BehaviorSubject(moment());
+  private date: BehaviorSubject<moment.Moment> = new BehaviorSubject(moment());
 
-  changeMonth(val: number) {
+  public changeMonth(val: number): void {
     let value = this.date.value.add(val, 'month');
     this.date.next(value);
   }
-  setToMonthCurrent() {
+  public setToMonthCurrent(): void {
     this.date.value.set({ year: moment().year(), month: moment().month() });
   }
 
-  createCalendar(absenceArray: Absence[] = [], now: moment.Moment = this.date.value) {
+  public createCalendar(absenceArray: Absence[]): Week[] {
+    let now = this.date.value
     let startOf = now.clone().startOf('month').startOf('week');
     let endOf = now.clone().endOf('month').endOf('week');
     let date = startOf.clone().subtract(1, 'day');
@@ -44,6 +46,10 @@ export class CalendarService {
           }),
       });
     }
-    return calendar
+    return calendar;
+  }
+
+  public getDate(): BehaviorSubject<moment.Moment> {
+    return this.date;
   }
 }

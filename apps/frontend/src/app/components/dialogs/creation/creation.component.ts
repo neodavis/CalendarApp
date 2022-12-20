@@ -24,14 +24,12 @@ import { Observable, takeUntil, Subject } from 'rxjs';
 export const dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   let start: AbstractControl | null | undefined = control.parent?.get('startControl');
   let end: AbstractControl | null | undefined = control.parent?.get('endControl');
-
+  
   if (start && end && moment(start.value).isAfter(moment(end.value))) {
     return { dateError: 'start is greater than end' };
   }
-
   start?.setErrors(null);
   end?.setErrors(null);
-
   return null;
 };
 
@@ -61,7 +59,7 @@ export class CreationComponent implements OnInit {
     commentControl: new FormControl(''),
   });
 
-  public submit() {
+  public submit(): void {
     let isBusy = false;
     this.busyDates.forEach((date: string) => {
       if (moment(date).isBetween( moment(this.group.value.startControl), moment(this.group.value.endControl), 'day', '[]')) {
@@ -100,11 +98,11 @@ export class CreationComponent implements OnInit {
     }
   }
 
-  public close() {
+  public close(): void {
     this.dialogRef.close();
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.absences$
       .pipe(takeUntil(this.notifier))
       .subscribe((absences: Absence[]) => {
@@ -118,7 +116,7 @@ export class CreationComponent implements OnInit {
       });
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.notifier.complete();
   }
 }

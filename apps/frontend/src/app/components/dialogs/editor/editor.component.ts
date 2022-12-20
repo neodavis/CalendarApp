@@ -36,7 +36,7 @@ export class EditorComponent {
   private notifier = new Subject();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { absence: Absence },
+    @Inject(MAT_DIALOG_DATA) private data: { absence: Absence },
     private dialogRef: MatDialogRef<EditorComponent>,
     private successDialog: MatDialog,
     private store: Store<AppState>
@@ -50,7 +50,8 @@ export class EditorComponent {
     endControl: new FormControl(moment(this.data.absence.end).toDate(), [ Validators.required, dateValidator ]),
     commentControl: new FormControl(this.data.absence.comment),
   });
-  public submit() {
+
+  public submit(): void {
     let isBusy = false;
     this.busyDates.forEach((date) => {
       if (moment(date).isBetween( moment(this.group.value.startControl), moment(this.group.value.endControl), 'day', '[]')) {
@@ -88,10 +89,10 @@ export class EditorComponent {
       });
     }
   }
-  public close() {
+  public close(): void {
     this.dialogRef.close();
   }
-  ngOnInit() {
+  public ngOnInit(): void {
     this.absences$
       .pipe(takeUntil(this.notifier))
       .subscribe((absences: Absence[]) => {
@@ -107,7 +108,7 @@ export class EditorComponent {
       });
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.notifier.complete();
   }
 }

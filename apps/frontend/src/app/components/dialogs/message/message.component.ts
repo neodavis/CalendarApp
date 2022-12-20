@@ -9,10 +9,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class MessageComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { title: string, details: string },
-    public dialogRef: MatDialogRef<MessageComponent>
+    private dialogRef: MatDialogRef<MessageComponent>
   ) {}
 
-  close() {
+  public close(): void {
     this.dialogRef.close();
   }
 }

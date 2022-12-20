@@ -20,56 +20,57 @@ import 'moment/locale/uk';
   styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent implements OnInit, OnDestroy {
-  public absences$: Observable<Absence[]>;
+  private absences$: Observable<Absence[]>;
+  private absences: Absence[];
+  private notifier = new Subject();
+  public date = this.calendarService.getDate()
   public isLoading$: Observable<Boolean>;
   public calendar: Week[];
   public current: Day;
-  public absences: Absence[];
-  public notifier = new Subject();
 
   constructor(
-    public dialog: MatDialog,
-    public calendarService: CalendarService,
+    private dialog: MatDialog,
+    private calendarService: CalendarService,
     private store: Store<AppState>
   ) {
     this.absences$ = this.store.pipe(select(absenceSelector));
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
   }
 
-  nextMonth() {
+  public nextMonth() {
     this.calendarService.changeMonth(1);
     this.calendar = this.calendarService.createCalendar( this.absences );
   }
 
-  prevMonth() {
+  public prevMonth() {
     this.calendarService.changeMonth(-1);
     this.calendar = this.calendarService.createCalendar( this.absences );
   }
-  currentMonth() {
+  public currentMonth() {
     this.calendarService.setToMonthCurrent();
     this.calendar = this.calendarService.createCalendar( this.absences );
   }
 
-  absenceToColor(absense: Absence) {
+  public absenceToColor(absense: Absence): string {
     return `#${ (absense.id * 5).toString(16).slice(0, 6) }`;
   }
 
-  getDateDetails(day: Day) {
+  public getDateDetails(day: Day): void {
     this.current = day;
   }
 
-  deleteAbsence(id: number) {
+  public deleteAbsence(id: number): void {
     this.store.dispatch(AbsenceActions.deleteAbsence({ id: id }));
   }
 
-  openEditorDialog(absence: Absence) {
+  public openEditorDialog(absence: Absence): void {
     this.dialog.open(EditorComponent, {
       data: { absence: absence },
       width: '500px',
     });
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.store.dispatch(AbsenceActions.getAbsences());
     this.absences$.pipe(takeUntil(this.notifier)).subscribe((absences: Absence[]) => {
       this.calendar = this.calendarService.createCalendar(absences);
@@ -91,7 +92,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy() {
     this.notifier.complete();
   }
 }

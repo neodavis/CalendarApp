@@ -8,7 +8,7 @@
         </button>
       </li>
       <li class="control-month">
-        {{ calendarService.date | async | dateFormat | titlecase }}
+        {{ date | async | dateFormat | titlecase }}
       </li>
       <li class="control-next">
         <button mat-raised-button color="primary" (click)="nextMonth()">
