@@ -74,8 +74,8 @@ export class EditorComponent {
         this.dialogRef.close();
         this.successDialog.open(MessageComponent, {
           data: {
-            title: 'Дані змінені успішно',
-            details: 'Новий проміжок відображений у таблиці',
+            title: 'Запит успішно надіслано',
+            details: 'Чекайте на відповідь найближчим часом',
           },
         });
       }

@@ -52,7 +52,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   public absenceToColor(absense: Absence): string {
-    return `#${ (absense.id * 5).toString(16).slice(0, 6) }`;
+    return `#${ (absense.id * 600).toString(16).slice(0, 6) }`;
   }
 
   public getDateDetails(day: Day): void {

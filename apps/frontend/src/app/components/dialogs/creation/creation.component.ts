@@ -71,7 +71,7 @@ export class CreationComponent implements OnInit {
     if (!isBusy) {
       if (this.group.valid) {
         this.result = {
-          id: Date.now(),
+          id: Math.round(Date.now()/(Math.random()*10000000)),
           start: this.group.value.startControl,
           end: this.group.value.endControl,
           type: this.group.value.typeControl,
