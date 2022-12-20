@@ -24,7 +24,7 @@ import { Observable, takeUntil, Subject } from 'rxjs';
 export const dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   let start: AbstractControl | null | undefined = control.parent?.get('startControl');
   let end: AbstractControl | null | undefined = control.parent?.get('endControl');
-  
+
   if (start && end && moment(start.value).isAfter(moment(end.value))) {
     return { dateError: 'start is greater than end' };
   }
@@ -42,7 +42,7 @@ export class CreationComponent implements OnInit {
   private absences$: Observable<Absence[]>;
   private result: Absence;
   private busyDates: Set<string> = new Set();
-  private notifier = new Subject();
+  private notifier: Subject<void> = new Subject<void>();
 
   constructor(
     private dialogRef: MatDialogRef<CreationComponent>,

@@ -1,7 +1,7 @@
 import { isLoadingSelector } from './../../shared/store/selectors';
 import { AppState } from '../../shared/interfaces/app-state';
 import { CalendarService } from './../../shared/service/calendar.service';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { Day } from '../../shared/interfaces/day';
 import { Week } from '../../shared/interfaces/week';
 import { Absence } from '../../shared/interfaces/absence';
@@ -22,8 +22,8 @@ import 'moment/locale/uk';
 export class CalendarComponent implements OnInit, OnDestroy {
   private absences$: Observable<Absence[]>;
   private absences: Absence[];
-  private notifier = new Subject();
-  public date = this.calendarService.getDate()
+  private notifier: Subject<void> = new Subject<void>();
+  public date: BehaviorSubject<moment.Moment> = this.calendarService.getDate()
   public isLoading$: Observable<Boolean>;
   public calendar: Week[];
   public current: Day;
@@ -37,16 +37,16 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
   }
 
-  public nextMonth() {
+  public nextMonth(): void {
     this.calendarService.changeMonth(1);
     this.calendar = this.calendarService.createCalendar( this.absences );
   }
 
-  public prevMonth() {
+  public prevMonth(): void {
     this.calendarService.changeMonth(-1);
     this.calendar = this.calendarService.createCalendar( this.absences );
   }
-  public currentMonth() {
+  public currentMonth(): void {
     this.calendarService.setToMonthCurrent();
     this.calendar = this.calendarService.createCalendar( this.absences );
   }
@@ -92,7 +92,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     });
   }
 
-  public ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.notifier.complete();
   }
 }

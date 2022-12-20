@@ -33,7 +33,7 @@ export class EditorComponent {
   private absences$: Observable<Absence[]>;
   private result: Absence;
   private busyDates: Set<string> = new Set();
-  private notifier = new Subject();
+  private notifier: Subject<void> = new Subject<void>();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) private data: { absence: Absence },
