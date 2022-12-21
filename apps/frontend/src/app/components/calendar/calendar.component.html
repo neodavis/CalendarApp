@@ -8,7 +8,7 @@
         </button>
       </li>
       <li class="control-month">
-        {{ calendarService.date | async | dateFormat | titlecase }}
+        {{ date | async | dateFormat | titlecase }}
       </li>
       <li class="control-next">
         <button mat-raised-button color="primary" (click)="nextMonth()">
@@ -42,14 +42,13 @@
             (click)="getDateDetails(day)"
           >
             <span>{{ day.value.format('DD') }}</span>
-            <ul class="abcense-list" *ngIf="day.absence.length">
+            <ul class="abcense-list" *ngIf="day.absence">
               <li
-                *ngFor="let item of day.absence"
                 class="abcense-list__item"
-                (click)="openEditorDialog(item)"
-                [ngStyle]="{ 'background-color': absenceToColor(item) }"
+                (click)="openEditorDialog(day.absence)"
+                [ngStyle]="{ 'background-color': absenceToColor(day.absence) }"
               >
-                Тип: {{ item.type }}
+                Тип: {{ day.absence.type }}
               </li>
             </ul>
           </td>
@@ -66,30 +65,27 @@
       <ul>
         <li>Дата: {{ current.value.format('LL') }}</li>
         <mat-card
-          *ngFor="let item of current.absence"
+          *ngIf="current.absence"
           class="details-card"
-          [ngStyle]="{ 'background-color': absenceToColor(item) }"
+          [ngStyle]="{ 'background-color': absenceToColor(current.absence) }"
         >
           <ul class="absence-list">
-            <li class="absence-list__item">
-              Кінець: {{ item.end | dateFormat : 'D MMMM YYYY р.' }}
-            </li>
-            <li class="absence-list__item">Причина: {{ item.type }}</li>
-            <li class="absence-list__item">Коментар: {{ item.comment }}</li>
+            <li class="absence-list__item"> Початок: {{ current.absence.start | dateFormat : 'D MMMM YYYY р.' }} </li>
+            <li class="absence-list__item"> Кінець: {{ current.absence.end | dateFormat : 'D MMMM YYYY р.' }} </li>
+            <li class="absence-list__item"> Причина: {{ current.absence.type }} </li>
+            <li class="absence-list__item"> Коментар: {{ current.absence.comment }} </li>
             <li class="absence-list__buttons">
               <button
                 class="delete-button"
                 mat-raised-button
                 color="warn"
-                (click)="deleteAbsence(item.id)"
-              >
+                (click)="deleteAbsence(current.absence.id)"> 
                 Видалити запис
               </button>
             </li>
           </ul>
         </mat-card>
-
-        <li *ngIf="!current.absence.length">
+        <li *ngIf="!current.absence">
           <mat-card class="details-card">
             На эту дану немає запланованих відпусток
           </mat-card>

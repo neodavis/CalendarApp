@@ -30,8 +30,8 @@ export class AbcenceEffects {
         )
       );
     })
-  )
-);
+  ));
+
   createAbsence$ = createEffect(() => 
   this.actions$.pipe(
     ofType(AbcanceActions.createAbsence),
@@ -42,19 +42,18 @@ export class AbcenceEffects {
         )
       );
     })
-  )
-);
-editAbsence$ = createEffect(() => 
-this.actions$.pipe(
-  ofType(AbcanceActions.editAbsence),
-  mergeMap((action: { absence: Absence }) => {
-    return this.backendService.editAbsence(action.absence).pipe(
-      map(
-        (absences) => AbcanceActions.editAbsenceSuccess({ absences }),
-      )
-    );
-  })
-)
-);
+  ));
+
+  editAbsence$ = createEffect(() => 
+  this.actions$.pipe(
+    ofType(AbcanceActions.editAbsence),
+    mergeMap((action: { absence: Absence }) => {
+      return this.backendService.editAbsence(action.absence).pipe(
+        map(
+          (absences) => AbcanceActions.editAbsenceSuccess({ absences }),
+        )
+      );
+    })
+  ));
   constructor(private actions$: Actions, private backendService: BackendService) {}
 }

@@ -21,21 +21,15 @@ import * as AbsenceActions from '../../../shared/store/actions';
 import { absenceSelector } from '../../../shared/store/selectors';
 import { Observable, takeUntil, Subject } from 'rxjs';
 
-export const dateValidator: ValidatorFn = (
-  control: AbstractControl
-): ValidationErrors | null => {
-  let start: AbstractControl | null | undefined =
-    control.parent?.get('startControl');
-  let end: AbstractControl | null | undefined =
-    control.parent?.get('endControl');
+export const dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+  let start: AbstractControl | null | undefined = control.parent?.get('startControl');
+  let end: AbstractControl | null | undefined = control.parent?.get('endControl');
 
   if (start && end && moment(start.value).isAfter(moment(end.value))) {
     return { dateError: 'start is greater than end' };
   }
-
   start?.setErrors(null);
   end?.setErrors(null);
-
   return null;
 };
 
@@ -45,16 +39,15 @@ export const dateValidator: ValidatorFn = (
   styleUrls: ['./creation.component.scss'],
 })
 export class CreationComponent implements OnInit {
-  public absences$: Observable<Absence[]>;
-  public busyDates: Set<any> = new Set();
-  private notifier = new Subject();
-  public result: Absence;
+  private absences$: Observable<Absence[]>;
+  private result: Absence;
+  private busyDates: Set<string> = new Set();
+  private notifier: Subject<void> = new Subject<void>();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<CreationComponent>,
-    public successDialog: MatDialog,
-    public store: Store<AppState>
+    private dialogRef: MatDialogRef<CreationComponent>,
+    private successDialog: MatDialog,
+    private store: Store<AppState>
   ) {
     this.absences$ = this.store.pipe(select(absenceSelector));
   }
@@ -66,17 +59,10 @@ export class CreationComponent implements OnInit {
     commentControl: new FormControl(''),
   });
 
-  public submit() {
+  public submit(): void {
     let isBusy = false;
-    this.busyDates.forEach((date) => {
-      if (
-        moment(date).isBetween(
-          moment(this.group.value.startControl),
-          moment(this.group.value.endControl),
-          'day',
-          '[]'
-        )
-      ) {
+    this.busyDates.forEach((date: string) => {
+      if (moment(date).isBetween( moment(this.group.value.startControl), moment(this.group.value.endControl), 'day', '[]')) {
         isBusy = true;
         return false;
       }
@@ -85,16 +71,14 @@ export class CreationComponent implements OnInit {
     if (!isBusy) {
       if (this.group.valid) {
         this.result = {
-          id: Date.now(),
+          id: Math.round(Date.now()/(Math.random()*10000000)),
           start: this.group.value.startControl,
           end: this.group.value.endControl,
           type: this.group.value.typeControl,
           comment: this.group.value.commentControl,
         };
 
-        this.store.dispatch(
-          AbsenceActions.createAbsence({ absence: this.result })
-        );
+        this.store.dispatch(AbsenceActions.createAbsence({ absence: this.result }));
         this.dialogRef.close();
         this.successDialog.open(MessageComponent, {
           data: {
@@ -114,11 +98,11 @@ export class CreationComponent implements OnInit {
     }
   }
 
-  public close() {
+  public close(): void {
     this.dialogRef.close();
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.absences$
       .pipe(takeUntil(this.notifier))
       .subscribe((absences: Absence[]) => {
@@ -132,7 +116,7 @@ export class CreationComponent implements OnInit {
       });
   }
 
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.notifier.complete();
   }
 }

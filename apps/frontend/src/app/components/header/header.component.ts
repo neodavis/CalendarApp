@@ -10,7 +10,7 @@ import { CreationComponent } from '../dialogs/creation/creation.component';
 export class HeaderComponent {
   constructor(private dialog: MatDialog) {}
 
-  openCreationDialog() {
+  public openCreationDialog(): void {
     this.dialog.open(CreationComponent, {
       width: '500px',
     });
