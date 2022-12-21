@@ -7,7 +7,6 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class BackendService {
-
   constructor(private http: HttpClient) { }
 
   public getAbsences(): Observable<Absence[]> {

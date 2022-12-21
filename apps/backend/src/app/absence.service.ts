@@ -1,49 +1,46 @@
+import { AbsenceEntity } from './entities/absence.entity';
 import { Absence } from './absence';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import moment = require('moment');
 
 Injectable()
 export class AbsenceService {
-    absences: Absence[] = [
-      {
-        id: 1371133012312,
-        start: moment("2022-12-02T22:00:00.000Z"),
-        end: moment("2022-12-09T22:00:00.000Z"),
-        type: 'Відпустка',
-        comment: 'Lorem Ipsum1',
-      },
-      {
-        id: 1671273037078,
-        start: moment("2022-12-13T22:00:00.000Z"),
-        end: moment("2022-12-20T22:00:00.000Z"),
-        type: 'Лікарняний',
-        comment: '123123',
-      },
-    ];
+    constructor(@InjectRepository(AbsenceEntity) private readonly absenceRepository: Repository<AbsenceEntity>) {}
 
-    getAbsences(): Absence[] {
-        return this.absences
+    getAbsences(): Promise<AbsenceEntity[]> {
+      return this.absenceRepository.find();
     }
 
-    deleteAbsence(id: number): Absence[] {
-      this.absences = this.absences.filter((absence: Absence) => {
-        return absence.id != id
+    async deleteAbsence(id: number): Promise<AbsenceEntity[]> {
+      await this.absenceRepository.delete({ id: id });
+      return this.absenceRepository.find();
+    }
+
+    async createAbsence(absence: Absence): Promise<AbsenceEntity[]> {
+      let absenceEntity: AbsenceEntity = new AbsenceEntity();
+
+      absenceEntity.id = absence.id
+      absenceEntity.start = moment(absence.start).format()
+      absenceEntity.end = moment(absence.end).format()
+      absenceEntity.comment = absence.comment
+      absenceEntity.type = absence.type
+
+      await this.absenceRepository.save(absenceEntity)
+
+      return this.absenceRepository.find()
+    }
+
+    async editAbsence(absence: Absence): Promise<AbsenceEntity[]> {
+      await this.absenceRepository.save({
+        id: absence.id,
+        start: moment(absence.start).format(),
+        end: moment(absence.end).format(),
+        comment: absence.comment,
+        type: absence.type,
       })
 
-      return this.absences
-    }
-
-    createAbsence(absence: Absence): Absence[] {
-      this.absences.push(absence)
-
-      return this.absences
-    }
-
-    editAbsence(abs: Absence): Absence[] {
-      this.absences = this.absences.map((absence: Absence) => {
-        return absence.id === abs.id ? abs : absence
-      })
-
-      return this.absences
+      return this.absenceRepository.find()
     }
 }
