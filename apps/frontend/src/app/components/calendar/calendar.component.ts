@@ -1,4 +1,4 @@
-import { isLoadingSelector } from './../../shared/store/selectors';
+import { isLoadingSelector, errorSelector } from './../../shared/store/selectors';
 import { AppState } from '../../shared/interfaces/app-state';
 import { CalendarService } from './../../shared/service/calendar.service';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
@@ -25,6 +25,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   private notifier: Subject<void> = new Subject<void>();
   public date: BehaviorSubject<moment.Moment> = this.calendarService.getDate()
   public isLoading$: Observable<Boolean>;
+  public error$: Observable<string | null>;
   public calendar: Week[];
   public current: Day;
 
@@ -35,6 +36,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   ) {
     this.absences$ = this.store.pipe(select(absenceSelector));
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
+    this.error$ = this.store.pipe(select(errorSelector))
   }
 
   public nextMonth(): void {

@@ -1,4 +1,10 @@
+
 <mat-spinner class="loading-spinner" *ngIf="isLoading$ | async"></mat-spinner>
+<div *ngIf="(error$ | async)">
+  <mat-card class="error-container">
+    Error: {{ error$ | async }}
+  </mat-card>
+</div> 
 <div class="container" *ngIf="!(isLoading$ | async)">
   <mat-card class="calendar-body">
     <ul class="calendar-control">
