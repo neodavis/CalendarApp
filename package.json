@@ -30,6 +30,8 @@
     "@ngrx/store-devtools": "^15.0.0",
     "@nrwl/angular": "^15.3.3",
     "@nrwl/workspace": "^15.3.3",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.0",
     "moment": "^2.29.4",
     "pg": "^8.8.0",
     "postgres": "^3.3.2",

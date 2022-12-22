@@ -1,22 +1,21 @@
+import { HttpException } from '@nestjs/common';
 import { BackendService } from './../service/backend.service';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, of } from 'rxjs';
+import { catchError, switchMap, mergeMap, of } from 'rxjs';
 import * as AbsenceActions from './actions';
 import { Absence } from '../interfaces/absence';
 
 @Injectable()
-export class AbcenceEffects {
+export class AbsenceEffects {
   getAbsences$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AbsenceActions.getAbsences),
       mergeMap(() => {
         return this.backendService.getAbsences().pipe(
-          map(
-            (absences) => AbsenceActions.getAbsencesSuccess({ absences }))
-        );
+          switchMap( async (absences: Absence[]) => AbsenceActions.getAbsencesSuccess({ absences })) );
       }),
-      catchError(async (error) => AbsenceActions.absenceErrorHandler(error))
+      catchError(async (error: HttpException) => AbsenceActions.absenceErrorHandler({message: error.message}))
     )
   );
 
@@ -25,10 +24,10 @@ export class AbcenceEffects {
     ofType(AbsenceActions.deleteAbsence),
     mergeMap((action: { id: number }) => {
       return this.backendService.deleteAbsence(action.id).pipe(
-        map( () => AbsenceActions.getAbsences() )
+        switchMap( async () => AbsenceActions.getAbsences() )
       );
     }),
-    catchError(async (error) => AbsenceActions.absenceErrorHandler(error))
+    catchError(async (error: HttpException) => AbsenceActions.absenceErrorHandler({message: error.message}))
   ));
 
   createAbsence$ = createEffect(() => 
@@ -36,10 +35,10 @@ export class AbcenceEffects {
     ofType(AbsenceActions.createAbsence),
     mergeMap((action: { absence: Absence }) => {
       return this.backendService.createAbsence(action.absence).pipe(
-        map( () => AbsenceActions.getAbsences() )
+        switchMap( async () => AbsenceActions.getAbsences() )
       );
     }),
-    catchError(async (error) => AbsenceActions.absenceErrorHandler(error))
+    catchError(async (error: HttpException) => AbsenceActions.absenceErrorHandler({message: error.message}))
   ));
 
   editAbsence$ = createEffect(() => 
@@ -47,10 +46,10 @@ export class AbcenceEffects {
     ofType(AbsenceActions.editAbsence),
     mergeMap((action: { absence: Absence }) => {
       return this.backendService.editAbsence(action.absence).pipe(
-        map( () => AbsenceActions.getAbsences() )
+        switchMap( async () => AbsenceActions.getAbsences() )
       );
     }),
-    catchError(async (error) => AbsenceActions.absenceErrorHandler(error))
+    catchError(async (error: HttpException) => AbsenceActions.absenceErrorHandler({message: error.message}))
   ));
   constructor(private actions$: Actions, private backendService: BackendService) {}
 }

@@ -1,5 +1,6 @@
+import { DeleteResult } from 'typeorm';
 import { Absence } from '../interfaces/absence';
-import { delay, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, isDevMode } from '@angular/core';
 
@@ -13,15 +14,15 @@ export class BackendService {
     return this.http.get<Absence[]>((isDevMode() ? 'http://localhost:3333' : window.location.origin) + '/api')
   }
   
-  public deleteAbsence(id: number): Observable<boolean> {
-    return this.http.delete<boolean>((isDevMode() ? 'http://localhost:3333' : window.location.origin) + '/api/delete/' + id)
+  public deleteAbsence(id: number): Observable<DeleteResult> {
+    return this.http.delete<DeleteResult>((isDevMode() ? 'http://localhost:3333' : window.location.origin) + '/api/delete/' + id)
   }
 
-  public createAbsence(absence: Absence): Observable<Absence> {
-    return this.http.post<Absence>((isDevMode() ? 'http://localhost:3333' : window.location.origin) + '/api/create', {absence: absence})
+  public createAbsence(absence: Absence): Observable<Absence | null> {
+    return this.http.post<Absence | null>((isDevMode() ? 'http://localhost:3333' : window.location.origin) + '/api/create', absence)
   }
   
-  public editAbsence(absence: Absence): Observable<Absence> {
-    return this.http.patch<Absence>((isDevMode() ? 'http://localhost:3333' : window.location.origin) + '/api/edit', {absence: absence})
+  public editAbsence(absence: Absence): Observable<Absence | null> {
+    return this.http.patch<Absence | null>((isDevMode() ? 'http://localhost:3333' : window.location.origin) + '/api/edit', absence)
   }
 }

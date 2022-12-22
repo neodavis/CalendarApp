@@ -1,4 +1,4 @@
-import { AbcenceEffects } from './shared/store/effects';
+import { AbsenceEffects } from './shared/store/effects';
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
@@ -51,7 +51,7 @@ registerLocaleData(localeUk, 'uk');
     }),
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot(),
-    EffectsModule.forFeature([AbcenceEffects]),
+    EffectsModule.forFeature([AbsenceEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'uk' }],

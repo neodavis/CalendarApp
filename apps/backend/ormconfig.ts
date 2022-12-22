@@ -1,4 +1,4 @@
-import { AbsenceEntity } from './src/app/entities/absence.entity';
+import { AbsenceEntity } from './src/app/absence/absence.entity';
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 
 const config: PostgresConnectionOptions = {
