@@ -1,4 +1,4 @@
-import { AbcenceEffects } from './shared/store/effects';
+import { AbsenceEffects } from './shared/store/effects';
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
@@ -7,7 +7,6 @@ import { MaterialModule } from '../material.module';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { CreationComponent } from './components/dialogs/creation/creation.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import localeUk from '@angular/common/locales/uk';
 import { registerLocaleData } from '@angular/common';
 import { MessageComponent } from './components/dialogs/message/message.component';
 import { HeaderComponent } from './components/header/header.component';
@@ -19,6 +18,7 @@ import { reducers } from './shared/store/reducers';
 import { EditorComponent } from './components/dialogs/editor/editor.component';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
+import localeUk from '@angular/common/locales/uk';
 
 registerLocaleData(localeUk, 'uk');
 
@@ -51,7 +51,7 @@ registerLocaleData(localeUk, 'uk');
     }),
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot(),
-    EffectsModule.forFeature([AbcenceEffects]),
+    EffectsModule.forFeature([AbsenceEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'uk' }],

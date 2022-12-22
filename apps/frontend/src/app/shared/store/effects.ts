@@ -1,24 +1,55 @@
+import { HttpException } from '@nestjs/common';
 import { BackendService } from './../service/backend.service';
-import { CalendarService } from './../service/calendar.service';
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { map, mergeMap } from 'rxjs';
-import * as AbcanceActions from './actions';
+import { catchError, switchMap, mergeMap, of } from 'rxjs';
+import * as AbsenceActions from './actions';
+import { Absence } from '../interfaces/absence';
 
 @Injectable()
-export class AbcenceEffects {
+export class AbsenceEffects {
   getAbsences$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(AbcanceActions.getAbsences),
+      ofType(AbsenceActions.getAbsences),
       mergeMap(() => {
         return this.backendService.getAbsences().pipe(
-          map(
-            (absence) => AbcanceActions.getAbsencesSuccess({ absence }),
-          )
-        );
-      })
+          switchMap( async (absences: Absence[]) => AbsenceActions.getAbsencesSuccess({ absences })) );
+      }),
+      catchError(async (error: HttpException) => AbsenceActions.absenceErrorHandler({message: error.message}))
     )
   );
 
+  deleteAbsence$ = createEffect(() =>
+  this.actions$.pipe(
+    ofType(AbsenceActions.deleteAbsence),
+    mergeMap((action: { id: number }) => {
+      return this.backendService.deleteAbsence(action.id).pipe(
+        switchMap( async () => AbsenceActions.getAbsences() )
+      );
+    }),
+    catchError(async (error: HttpException) => AbsenceActions.absenceErrorHandler({message: error.message}))
+  ));
+
+  createAbsence$ = createEffect(() => 
+  this.actions$.pipe(
+    ofType(AbsenceActions.createAbsence),
+    mergeMap((action: { absence: Absence }) => {
+      return this.backendService.createAbsence(action.absence).pipe(
+        switchMap( async () => AbsenceActions.getAbsences() )
+      );
+    }),
+    catchError(async (error: HttpException) => AbsenceActions.absenceErrorHandler({message: error.message}))
+  ));
+
+  editAbsence$ = createEffect(() => 
+  this.actions$.pipe(
+    ofType(AbsenceActions.editAbsence),
+    mergeMap((action: { absence: Absence }) => {
+      return this.backendService.editAbsence(action.absence).pipe(
+        switchMap( async () => AbsenceActions.getAbsences() )
+      );
+    }),
+    catchError(async (error: HttpException) => AbsenceActions.absenceErrorHandler({message: error.message}))
+  ));
   constructor(private actions$: Actions, private backendService: BackendService) {}
 }

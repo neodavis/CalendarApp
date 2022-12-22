@@ -1,49 +1,43 @@
 import { Absence } from '../interfaces/absence';
 import { AbsencesState } from '../interfaces/absences-state';
 import { createReducer, on } from '@ngrx/store';
-import * as AbcanceActions from './actions';
-import * as moment from 'moment';
+import * as AbsenceActions from './actions';
 
 export const initialState: AbsencesState = {
   absences: [],
-  isLoading: false
+  isLoading: false,
+  error: null
 };
 
 export const reducers = createReducer(
   initialState,
-  on(AbcanceActions.getAbsences, (state: AbsencesState) => {
-    return { ...state, isLoading: true };
+
+  on(AbsenceActions.getAbsences, (state: AbsencesState): AbsencesState => {
+    return { ...state, isLoading: true, error: null };
   }),
-  on(AbcanceActions.getAbsencesSuccess, (state: AbsencesState, action: any) => {
-    return {...state, absences: action.absence, isLoading: false}
+
+  on(AbsenceActions.getAbsencesSuccess, (state: AbsencesState, action: { absences: Absence[] }): AbsencesState => {
+    return {...state, absences: action.absences, isLoading: false, error: null}
   }),
-  on(AbcanceActions.createAbsence, (state: AbsencesState, action) => {
-    return { ...state, absences: [...state.absences, action.absence] };
+
+  on(AbsenceActions.createAbsence, (state: AbsencesState): AbsencesState => {
+    return { ...state, isLoading: true, error: null };
   }),
+
   on(
-    AbcanceActions.editAbsence,
-    (state: AbsencesState, action: { absence: Absence }) => {
-      return {
-        ...state,
-        absences: [
-          ...state.absences.map((absence: Absence) => {
-            return absence.id === action.absence.id ? action.absence : absence;
-          }),
-        ],
-      };
+    AbsenceActions.editAbsence, (state: AbsencesState): AbsencesState => {
+      return {...state, isLoading: true, error: null};
     }
   ),
   on(
-    AbcanceActions.deleteAbsence,
-    (state: AbsencesState, action: { id: number }) => {
-      return {
-        ...state,
-        absences: [
-          ...state.absences.filter(
-            (absence: Absence) => absence.id !== action.id
-          ),
-        ],
-      };
+    AbsenceActions.deleteAbsence, (state: AbsencesState): AbsencesState => { 
+      return { ...state, isLoading: true, error: null} 
+    }
+  ),
+  on(
+    AbsenceActions.absenceErrorHandler, (state: AbsencesState, action: { message: string }): AbsencesState => {
+      return { ...state, error: action.message, isLoading: false} 
     }
   )
+
 );
