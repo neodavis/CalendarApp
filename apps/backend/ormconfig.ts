@@ -3,11 +3,11 @@ import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConne
 
 const config: PostgresConnectionOptions = {
     type: "postgres",
-    host: "localhost",
-    port: 5432,
+    host: "containers-us-west-140.railway.app",
+    port: 6417,
     username: "postgres",
-    password: "qwerty",
-    database: "absence_db",
+    password: "aoLm9QPEKhyYQZxVzOtM",
+    database: "railway",
     synchronize: true,
     entities: [AbsenceEntity],
 }
