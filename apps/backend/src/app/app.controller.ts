@@ -13,31 +13,16 @@ export class AppController {
 
   @Post('/delete')
   deleteAbsence(@Body() body: { id: number }) {
-    try {
-      return this.absenceService.deleteAbsence(body.id)
-    } catch (error) {
-      Logger.log(error)
-      return error
-    }
+    return this.absenceService.deleteAbsence(body.id)
   }
 
   @Post('/create')
   createAbsence(@Body() body: { absence: Absence }) {
-    try {
-      return this.absenceService.createAbsence(body.absence);
-    } catch (error) {
-      Logger.log(error)
-      return error
-    }
+    return this.absenceService.createAbsence(body.absence);
   }
 
   @Post('/edit')
   editAbsence(@Body() body: { absence: Absence }) {
-    try {
-      return this.absenceService.editAbsence(body.absence);
-    } catch (error) {
-      Logger.log(error)
-      return error
-    }
+    return this.absenceService.editAbsence(body.absence);
   }
 }
