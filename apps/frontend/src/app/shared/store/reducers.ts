@@ -10,19 +10,17 @@ export const initialState: AbsencesState = {
 
 export const reducers = createReducer(
   initialState,
+
   on(AbsenceActions.getAbsences, (state: AbsencesState): AbsencesState => {
     return { ...state, isLoading: true };
   }),
+
   on(AbsenceActions.getAbsencesSuccess, (state: AbsencesState, action: { absences: Absence[] }): AbsencesState => {
     return {...state, absences: action.absences, isLoading: false}
   }),
 
-
   on(AbsenceActions.createAbsence, (state: AbsencesState): AbsencesState => {
     return { ...state, isLoading: true };
-  }),
-  on(AbsenceActions.createAbsenceSuccess, (state: AbsencesState, action: { absences: Absence[] }): AbsencesState => {
-    return {...state, absences: [...action.absences], isLoading: false};
   }),
 
   on(
@@ -31,19 +29,15 @@ export const reducers = createReducer(
     }
   ),
   on(
-    AbsenceActions.editAbsenceSuccess, (state: AbsencesState, action: { absences: Absence[] }): AbsencesState => {
-      return {...state, absences: [...action.absences], isLoading: false};
-    }
-  ),
-
-  on(
     AbsenceActions.deleteAbsence, (state: AbsencesState): AbsencesState => { 
       return { ...state, isLoading: true} 
     }
   ),
   on(
-    AbsenceActions.deleteAbsenceSuccess, (state: AbsencesState, action: { absences: Absence[]}): AbsencesState => {
-      return { ...state, absences: [...action.absences], isLoading: false}
+    AbsenceActions.absenceErrorHandler, (state: AbsencesState, action: { message: string }): AbsencesState => {
+      console.error(action.message)
+      return { ...state, isLoading: false} 
     }
   )
+
 );

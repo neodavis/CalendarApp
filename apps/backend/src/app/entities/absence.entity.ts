@@ -1,19 +1,19 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ name: 'abcenses'})
+@Entity({ name: 'abcenses' })
 export class AbsenceEntity {
-    @PrimaryColumn()
-    id: number
+  @PrimaryColumn()
+  id: number;
 
-    @Column()
-    start: string
+  @Column()
+  start: Date;
 
-    @Column()
-    end: string
+  @Column()
+  end: Date;
 
-    @Column()
-    type: string
+  @Column()
+  type: string;
 
-    @Column()
-    comment: string
+  @Column()
+  comment: string;
 }

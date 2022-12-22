@@ -8,21 +8,36 @@ export class AppController {
 
   @Get()
   getAbsences() {
-    return this.absenceService.getAbsences()
+    return this.absenceService.getAbsences();
   }
 
   @Post('/delete')
   deleteAbsence(@Body() body: { id: number }) {
-    return this.absenceService.deleteAbsence(body.id)
+    try {
+      return this.absenceService.deleteAbsence(body.id)
+    } catch (error) {
+      Logger.log(error)
+      return error
+    }
   }
 
   @Post('/create')
   createAbsence(@Body() body: { absence: Absence }) {
-    return this.absenceService.createAbsence(body.absence)
+    try {
+      return this.absenceService.createAbsence(body.absence);
+    } catch (error) {
+      Logger.log(error)
+      return error
+    }
   }
 
   @Post('/edit')
   editAbsence(@Body() body: { absence: Absence }) {
-    return this.absenceService.editAbsence(body.absence)
+    try {
+      return this.absenceService.editAbsence(body.absence);
+    } catch (error) {
+      Logger.log(error)
+      return error
+    }
   }
 }
