@@ -34,12 +34,7 @@ export class CalendarService {
             let disabled = !now.isSame(value, 'month');
             let current = moment().isSame(value, 'day');
             let absence: Absence | undefined = absenceArray.find((absence: Absence) => {
-              return value.isBetween(
-                moment(absence.start),
-                moment(absence.end),
-                'day',
-                '[]'
-              );
+              return value.isBetween(moment(absence.start), moment(absence.end), 'day', '[]');
             });
 
             return { value, current, disabled, absence };

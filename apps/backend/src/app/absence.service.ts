@@ -12,20 +12,21 @@ export class AbsenceService {
     private readonly absenceRepository: Repository<AbsenceEntity>
   ) {}
 
-  getAbsences(): Promise<AbsenceEntity[]> {
+  public getAbsences(): Promise<AbsenceEntity[]> {
     return this.absenceRepository.find();
   }
 
-  async deleteAbsence(id: number): Promise<boolean> {
+  public async deleteAbsence(id: number): Promise<boolean> {
     await this.absenceRepository.delete({ id: id });
+
     if (await this.absenceRepository.findOne({ where: { id: id } })) {
       throw new HttpException('Abcense Delete Error', HttpStatus.BAD_REQUEST)
     } else {
-      return true;
+      return true
     }
   }
 
-  async createAbsence(absence: Absence): Promise<boolean> {
+  public async createAbsence(absence: Absence): Promise<AbsenceEntity | null> {
     let absenceEntity: AbsenceEntity = new AbsenceEntity();
 
     absenceEntity.id = absence.id;
@@ -36,31 +37,30 @@ export class AbsenceService {
     
     await this.absenceRepository.save({
       id: absence.id,
-      start: moment(absence.start).format(),
-      end: moment(absence.end).format(),
+      start: moment(absence.start).toDate(),
+      end: moment(absence.end).toDate(),
       comment: absence.comment,
       type: absence.type,
     })
     
-    if (await this.absenceRepository.find({ where: { id: absence.id } })) {
-      return true;
+    if (await this.absenceRepository.findOne({ where: { id: absence.id } })) {
+      return await this.absenceRepository.findOne({ where: { id: absence.id } })
     } else {
       throw new HttpException('Abcense Create Error', HttpStatus.BAD_REQUEST)
-
     }
   }
 
-  async editAbsence(absence: Absence): Promise<boolean> {
+  public async editAbsence(absence: Absence): Promise<AbsenceEntity | null> {
     await this.absenceRepository.save({
       id: absence.id,
-      start: moment(absence.start).format(),
-      end: moment(absence.end).format(),
+      start: moment(absence.start).toDate(),
+      end: moment(absence.end).toDate(),
       comment: absence.comment,
       type: absence.type,
     });
 
-    if (await this.absenceRepository.find({ where: { id: absence.id} })) {
-      return true
+    if (await this.absenceRepository.findOne({ where: { id: absence.id } })) {
+      return await this.absenceRepository.findOne({ where: { id: absence.id } })
     } else {
       throw new HttpException('Abcense Edit Error', HttpStatus.BAD_REQUEST)
     }
