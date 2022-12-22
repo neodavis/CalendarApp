@@ -45,7 +45,7 @@ export class AbsenceService {
     if (await this.absenceRepository.find({ where: { id: absence.id } })) {
       return true;
     } else {
-      throw new HttpException('Abcense Delete Error', HttpStatus.BAD_REQUEST)
+      throw new HttpException('Abcense Create Error', HttpStatus.BAD_REQUEST)
 
     }
   }
