@@ -10,14 +10,14 @@ export class UserBackendService {
   constructor(private http: HttpClient) { }
 
   public userLogin(user: User): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>((isDevMode() ? 'http://localhost:3333' : window.location.origin) + '/api/user/login/', user)
+    return this.http.post<{ token: string }>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/user/login/', user)
   }
 
   public userAuth(token: string): Observable<User | any> {
-    return this.http.get<User | any>((isDevMode() ? 'http://localhost:3333' : window.location.origin) + '/api/user/auth/' + token)
+    return this.http.get<User | any>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/user/auth/' + token)
   }
 
   public userRegister(user: User): Observable<User> {
-    return this.http.post<User>((isDevMode() ? 'http://localhost:3333' : window.location.origin) + '/api/user/register/', user)
+    return this.http.post<User>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/user/register/', user)
   }
 }

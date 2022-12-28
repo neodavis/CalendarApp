@@ -14,7 +14,7 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalPipes(new ValidationPipe());
   const port = process.env['PORT'] || 3333;
-  await app.listen(port);
+  await app.listen(port, "0.0.0.0");
 }
 
 bootstrap();
