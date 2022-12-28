@@ -1,8 +1,11 @@
-import { IsInt, IsString, IsDate } from 'class-validator';
+import { IsInt, IsString } from 'class-validator';
 
 export class AbsenceDto {
   @IsInt()
   id: number;
+
+  @IsInt()
+  user_id: number;
 
   @IsString()
   start: string;

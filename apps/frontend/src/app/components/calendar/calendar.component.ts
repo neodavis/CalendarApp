@@ -1,18 +1,20 @@
-import { isLoadingSelector, errorSelector } from './../../shared/store/selectors';
+import { userSelector } from './../../shared/store/users/selectors';
+import * as UserActions from './../../shared/store/users/actions';
+import { isLoadingSelector, absenceSelector, errorSelector } from './../../shared/store/absences/selectors';
+import * as AbsenceActions from '../../shared/store/absences/actions';
 import { AppState } from '../../shared/interfaces/app-state';
 import { CalendarService } from './../../shared/service/calendar.service';
 import { BehaviorSubject, Observable, Subject, takeUntil } from 'rxjs';
 import { Day } from '../../shared/interfaces/day';
 import { Week } from '../../shared/interfaces/week';
-import { Absence } from '../../shared/interfaces/absence';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { select, Store } from '@ngrx/store';
-import * as AbsenceActions from '../../shared/store/actions';
-import { absenceSelector } from '../../shared/store/selectors';
 import { EditorComponent } from '../dialogs/editor/editor.component';
 import * as moment from 'moment';
 import 'moment/locale/uk';
+import { Absence } from '../../shared/interfaces/absence';
+import { User } from '../../shared/interfaces/user';
 
 @Component({
   selector: 'app-calendar',
@@ -23,6 +25,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
   private absences$: Observable<Absence[]>;
   private absences: Absence[];
   private notifier: Subject<void> = new Subject<void>();
+  public user$: Observable<User | null>;
+  public user_id: number = 0;
   public date: BehaviorSubject<moment.Moment> = this.calendarService.getDate()
   public isLoading$: Observable<Boolean>;
   public error$: Observable<string | null>;
@@ -36,7 +40,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
   ) {
     this.absences$ = this.store.pipe(select(absenceSelector));
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
-    this.error$ = this.store.pipe(select(errorSelector))
+    this.error$ = this.store.pipe(select(errorSelector));
+    this.user$ = this.store.pipe(select(userSelector));
   }
 
   public nextMonth(): void {
@@ -53,6 +58,10 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.calendar = this.calendarService.createCalendar( this.absences );
   }
 
+  public updateAbsences(): void {
+    this.store.dispatch(AbsenceActions.getAbsences({ user_id: this.user_id }))
+  }
+
   public absenceToColor(absense: Absence): string {
     return `#${ (absense.id * 10000).toString(16).slice(0, 6) }`;
   }
@@ -62,7 +71,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   public deleteAbsence(id: number): void {
-    this.store.dispatch(AbsenceActions.deleteAbsence({ id: id }));
+    this.store.dispatch(AbsenceActions.deleteAbsence({ absence_id: id, user_id: this.user_id }));
   }
 
   public openEditorDialog(absence: Absence): void {
@@ -73,7 +82,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
-    this.store.dispatch(AbsenceActions.getAbsences());
+    if (localStorage.getItem('token') != null) {
+      this.store.dispatch(UserActions.userAuth({
+        token: String(localStorage.getItem('token'))
+      }));
+    }
+    
     this.absences$.pipe(takeUntil(this.notifier)).subscribe((absences: Absence[]) => {
       this.calendar = this.calendarService.createCalendar(absences);
       this.absences = absences;
@@ -92,6 +106,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
         });
       }
     });
+
+    this.user$.pipe(takeUntil(this.notifier)).subscribe((user: User | null) => {
+      if (user?.user_id) {
+        this.user_id = user.user_id
+      }
+    })
   }
 
   public ngOnDestroy(): void {

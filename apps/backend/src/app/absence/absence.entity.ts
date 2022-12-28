@@ -6,6 +6,9 @@ export class AbsenceEntity {
   id: number;
 
   @Column()
+  user_id: number;
+  
+  @Column()
   start: Date;
 
   @Column()

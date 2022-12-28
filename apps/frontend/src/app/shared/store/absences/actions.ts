@@ -1,7 +1,10 @@
 import { createAction, props } from '@ngrx/store';
-import { Absence } from '../interfaces/absence';
+import { Absence } from '../../interfaces/absence';
 
-export const getAbsences = createAction('[Absence] Get Absences');
+export const getAbsences = createAction(
+  '[Absence] Get Absences',
+  props<{ user_id: number }>()
+);
 
 export const getAbsencesSuccess = createAction(
   '[Absence] Get Absences Success',
@@ -20,11 +23,11 @@ export const editAbsence = createAction(
 
 export const deleteAbsence = createAction(
   '[Absence] Delete Absence',
-  props<{ id: number }>()
+  props<{ absence_id: number, user_id: number }>()
 );
 
-export const absenceErrorHandler = createAction(
-  '[Absence] Absence Error',
+export const absenceQueryFailure = createAction(
+  '[Absence] Absence Query Error',
   props<{ message: string }>()
 );
 

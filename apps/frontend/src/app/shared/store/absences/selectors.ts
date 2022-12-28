@@ -1,6 +1,6 @@
-import { AbsencesState } from './../interfaces/absences-state';
+import { AbsencesState } from './../../interfaces/absences-state';
 import { createSelector } from '@ngrx/store';
-import { AppState } from '../interfaces/app-state';
+import { AppState } from '../../interfaces/app-state';
 
 export const selectFeature = (state: AppState) => state.absences;
 

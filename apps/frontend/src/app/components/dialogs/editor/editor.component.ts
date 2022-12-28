@@ -6,9 +6,9 @@ import * as moment from 'moment';
 import { Absence } from '../../../shared/interfaces/absence';
 import { AppState } from '../../../shared/interfaces/app-state';
 import { MessageComponent } from '../message/message.component';
-import * as AbsenceActions from '../../../shared/store/actions';
+import * as AbsenceActions from '../../../shared/store/absences/actions';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { absenceSelector } from '../../../shared/store/selectors';
+import { absenceSelector } from '../../../shared/store/absences/selectors';
 
 export const dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   let start: AbstractControl | null | undefined = control.parent?.get('startControl');
@@ -64,6 +64,7 @@ export class EditorComponent {
       if (this.group.valid) {
         this.result = {
           id: this.data.absence.id,
+          user_id: 1,
           start: this.group.value.startControl,
           end: this.group.value.endControl,
           type: this.group.value.typeControl,

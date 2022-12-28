@@ -3,10 +3,11 @@
     <li class="nav-list__item">
       <h1 class="title">Календарне планування</h1>
     </li>
-    <li class="create-button">
-      <button mat-raised-button color="primary" (click)="openCreationDialog()">
-        Додати дату
-      </button>
-    </li>
+    <div class="button-container">
+      <button class="button-login" mat-raised-button color="accent" (click)="openLoginDialog()" *ngIf="!user">Вхід</button>
+      <button class="button-register" mat-raised-button color="accent" (click)="openRegistrationDialog()" *ngIf="!user">Регестрація</button>
+      <button class="button-logout" mat-raised-button color="warn" (click)="openLogoutDialog()" *ngIf="user">Вийти</button>
+      <button class="button-create" mat-raised-button color="primary" (click)="openCreationDialog()" *ngIf="user">Додати дату</button>
+    </div>
   </ul>
 </nav>

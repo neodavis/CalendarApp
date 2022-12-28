@@ -1,12 +1,12 @@
 
-<mat-spinner class="loading-spinner" *ngIf="isLoading$ | async"></mat-spinner>
 <div *ngIf="(error$ | async)">
   <mat-card class="error-container">
     Error: {{ error$ | async }}
   </mat-card>
 </div> 
-<div class="container" *ngIf="!(isLoading$ | async)">
+<div class="container">
   <mat-card class="calendar-body">
+    <div class="disabled-container" *ngIf="(!(user$ | async) && (error$ | async) && (isLoading$ | async))"></div>
     <ul class="calendar-control">
       <li class="control-prev">
         <button mat-raised-button color="primary" (click)="prevMonth()">
@@ -27,7 +27,9 @@
         </button>
       </li>
     </ul>
-    <table class="calendar-table">
+    <button class="button-update" mat-raised-button color="accent" (click)="updateAbsences()">Оновити</button>
+    <mat-spinner class="loading-spinner" *ngIf="isLoading$ | async"></mat-spinner>
+    <table class="calendar-table" *ngIf="!(isLoading$ | async)">
       <thead class="table-head">
         <tr class="table-head__row">
           <th class="table-head__cell">Понеділок</th>

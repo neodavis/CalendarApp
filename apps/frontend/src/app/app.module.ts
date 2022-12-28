@@ -1,4 +1,5 @@
-import { AbsenceEffects } from './shared/store/effects';
+import { UserEffects } from './shared/store/users/effects';
+import { AbsenceEffects } from './shared/store/absences/effects';
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
@@ -14,11 +15,14 @@ import { DateFormatPipe } from './shared/pipe/date-format';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreModule } from '@ngrx/store';
-import { reducers } from './shared/store/reducers';
+import { AbsenceReducers } from './shared/store/absences/reducers';
 import { EditorComponent } from './components/dialogs/editor/editor.component';
 import { HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import localeUk from '@angular/common/locales/uk';
+import { LoginComponent } from './components/dialogs/login/login.component';
+import { RegisterComponent } from './components/dialogs/register/register.component';
+import { UserReducers } from './shared/store/users/reducers';
 
 registerLocaleData(localeUk, 'uk');
 
@@ -31,6 +35,9 @@ registerLocaleData(localeUk, 'uk');
     HeaderComponent,
     DateFormatPipe,
     EditorComponent,
+    LoginComponent,
+    LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,18 +47,18 @@ registerLocaleData(localeUk, 'uk');
     FormsModule,
     HttpClientModule,
     StoreModule.forRoot(),
-    StoreModule.forFeature('absences', reducers),
-    // Instrumentation must be imported after importing StoreModule (config is optional)
+    StoreModule.forFeature('absences', AbsenceReducers),
+    StoreModule.forFeature('user', UserReducers),
     StoreDevtoolsModule.instrument({
-      maxAge: 25, // Retains last 25 states
-      logOnly: !isDevMode(), // Restrict extension to log-only mode
-      autoPause: true, // Pauses recording actions and state changes when the extension window is not open
-      trace: false, //  If set to true, will include stack trace for every dispatched action, so you can see it in trace tab jumping directly to that part of code
-      traceLimit: 75, // maximum stack trace frames to be stored (in case trace option was provided as true)
+      maxAge: 25,
+      logOnly: !isDevMode(),
+      autoPause: true,
+      trace: false,
+      traceLimit: 75,
     }),
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot(),
-    EffectsModule.forFeature([AbsenceEffects]),
+    EffectsModule.forFeature([AbsenceEffects, UserEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'uk' }],

@@ -11,10 +11,25 @@
   height: 100px;
   list-style-type: none;
   padding: 0;
+}
 
-  .nav-button__container {
-    display: flex;
-  }
+.button-container {
+  display: grid;
+  gap: 5px;
+  grid-template-areas: "login register"
+                        "create create";
+}
+
+.button-login {
+  grid-area: login;
+}
+
+.button-register {
+  grid-area: register;
+}
+
+.button-create {
+  grid-area: create;
 }
 
 .title {

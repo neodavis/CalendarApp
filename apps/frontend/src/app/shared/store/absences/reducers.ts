@@ -1,7 +1,7 @@
-import { Absence } from '../interfaces/absence';
-import { AbsencesState } from '../interfaces/absences-state';
+import { AbsencesState } from '../../interfaces/absences-state';
 import { createReducer, on } from '@ngrx/store';
 import * as AbsenceActions from './actions';
+import { Absence } from '../../interfaces/absence';
 
 export const initialState: AbsencesState = {
   absences: [],
@@ -9,7 +9,7 @@ export const initialState: AbsencesState = {
   error: null
 };
 
-export const reducers = createReducer(
+export const AbsenceReducers = createReducer(
   initialState,
 
   on(AbsenceActions.getAbsences, (state: AbsencesState): AbsencesState => {
@@ -17,7 +17,7 @@ export const reducers = createReducer(
   }),
 
   on(AbsenceActions.getAbsencesSuccess, (state: AbsencesState, action: { absences: Absence[] }): AbsencesState => {
-    return {...state, absences: action.absences, isLoading: false, error: null}
+    return { ...state, absences: action.absences, isLoading: false, error: null };
   }),
 
   on(AbsenceActions.createAbsence, (state: AbsencesState): AbsencesState => {
@@ -26,17 +26,17 @@ export const reducers = createReducer(
 
   on(
     AbsenceActions.editAbsence, (state: AbsencesState): AbsencesState => {
-      return {...state, isLoading: true, error: null};
+      return { ...state, isLoading: true, error: null };
     }
   ),
   on(
     AbsenceActions.deleteAbsence, (state: AbsencesState): AbsencesState => { 
-      return { ...state, isLoading: true, error: null} 
+      return { ...state, isLoading: true, error: null } ;
     }
   ),
   on(
-    AbsenceActions.absenceErrorHandler, (state: AbsencesState, action: { message: string }): AbsencesState => {
-      return { ...state, error: action.message, isLoading: false} 
+    AbsenceActions.absenceQueryFailure, (state: AbsencesState, action: { message: string }): AbsencesState => {
+      return { ...state, isLoading: false, error: action.message }; 
     }
   )
 
