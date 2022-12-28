@@ -1,5 +1,8 @@
 <div class="container">
     <h3>Регестрація:</h3>
+    
+    <p>{{ error$ | async }}</p>
+    
     <form [formGroup]="group" class="login-form">
 
       <mat-form-field appearance="fill">

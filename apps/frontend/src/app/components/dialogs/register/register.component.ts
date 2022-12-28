@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 import { AppState } from '../../../shared/interfaces/app-state';
 import * as UserActions from '../../../shared/store/users/actions'
+import { errorSelector } from '../../../shared/store/users/selectors';
 
 
 @Component({
@@ -12,10 +14,14 @@ import * as UserActions from '../../../shared/store/users/actions'
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
+  public error$: Observable<string | null>; 
+
   constructor(
     private dialogRef: MatDialogRef<RegisterComponent>,
     private store: Store<AppState>
-  ) {}
+  ) {
+    this.error$ = this.store.select(errorSelector);
+  }
 
   public group: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),

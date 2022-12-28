@@ -14,7 +14,6 @@ import { Observable, Subject, take } from 'rxjs';
 })
 export class LoginComponent {
   public error$: Observable<string | null>; 
-  private notifier: Subject<void> = new Subject<void>();
 
   constructor(
     private dialogRef: MatDialogRef<LoginComponent>,
@@ -39,9 +38,5 @@ export class LoginComponent {
 
   public close(): void {
     this.dialogRef.close();
-  }
-
-  public ngOnDestroy(): void {
-    this.notifier.complete();
   }
 }
