@@ -1,11 +1,12 @@
 import { AppState } from './../../../shared/interfaces/app-state';
+import * as AbsenceActions from './../../../shared/store/absences/actions';
+import { UserBackendService } from './../../../shared/service/user-backend.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Component } from '@angular/core';
+import { take } from 'rxjs';
 import { Store } from '@ngrx/store';
-import * as UserActions from '../../../shared/store/users/actions'
-import { errorSelector } from '../../../shared/store/users/selectors';
-import { Observable, Subject, take } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -13,14 +14,12 @@ import { Observable, Subject, take } from 'rxjs';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-  public error$: Observable<string | null>; 
-
+  public error: string | null = null
   constructor(
     private dialogRef: MatDialogRef<LoginComponent>,
+    private userService: UserBackendService,
     private store: Store<AppState>
-  ) {
-    this.error$ = this.store.select(errorSelector);
-  }
+  ) {}
 
   public group: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
@@ -28,13 +27,18 @@ export class LoginComponent {
   })
 
   public submit(): void {
-      this.store.dispatch(UserActions.userLogin({
-        user: {
-          username: this.group.value.username,
-          password: this.group.value.password 
-        }
-      }));
-  }
+    this.userService.userLogin(this.group.value.username, this.group.value.password).pipe(take(1)).subscribe({
+      next: (response: { token: string} ) => {
+        if (response.token) {
+            this.error = null;
+            sessionStorage.setItem('token', response.token)
+            this.store.dispatch(AbsenceActions.getAbsences())
+            this.close()
+      }},
+      error: (error: HttpErrorResponse) => {
+        this.error = error.error.message
+      }})
+    } 
 
   public close(): void {
     this.dialogRef.close();

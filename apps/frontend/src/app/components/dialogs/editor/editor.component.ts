@@ -62,14 +62,15 @@ export class EditorComponent {
     });
     if (!isBusy) {
       if (this.group.valid) {
-        this.result = {
-          id: this.data.absence.id,
-          user_id: 1,
-          start: this.group.value.startControl,
-          end: this.group.value.endControl,
-          type: this.group.value.typeControl,
-          comment: this.group.value.commentControl,
-        };
+        if (this.group.valid) {
+          this.result = {
+            id: 1,
+            userId: Number(sessionStorage.getItem('userId')),
+            start: this.group.value.startControl,
+            end: this.group.value.endControl,
+            type: this.group.value.typeControl,
+            comment: this.group.value.commentControl,
+          };
 
         this.store.dispatch(AbsenceActions.editAbsence({ absence: this.result }));
         this.dialogRef.close();
@@ -89,6 +90,7 @@ export class EditorComponent {
         },
       });
     }
+  }
   }
   public close(): void {
     this.dialogRef.close();

@@ -6,7 +6,6 @@
 </div> 
 <div class="container">
   <mat-card class="calendar-body">
-    <div class="disabled-container" *ngIf="(!(user$ | async) && (error$ | async) && (isLoading$ | async))"></div>
     <ul class="calendar-control">
       <li class="control-prev">
         <button mat-raised-button color="primary" (click)="prevMonth()">
@@ -27,7 +26,7 @@
         </button>
       </li>
     </ul>
-    <button class="button-update" mat-raised-button color="accent" (click)="updateAbsences()">Оновити</button>
+    <button class="button-update" mat-raised-button color="accent" (click)="updateAbsences()" *ngIf="sessionStorage.getItem('token')">Оновити</button>
     <mat-spinner class="loading-spinner" *ngIf="isLoading$ | async"></mat-spinner>
     <table class="calendar-table" *ngIf="!(isLoading$ | async)">
       <thead class="table-head">
@@ -54,7 +53,7 @@
               <li
                 class="abcense-list__item"
                 (click)="openEditorDialog(day.absence)"
-                [ngStyle]="{ 'background-color': absenceToColor(day.absence) }"
+                [ngStyle]="{ 'background-color': absenceToColor(day.absence.id) }"
               >
                 Тип: {{ day.absence.type }}
               </li>
@@ -75,13 +74,14 @@
         <mat-card
           *ngIf="current.absence"
           class="details-card"
-          [ngStyle]="{ 'background-color': absenceToColor(current.absence) }"
+          [ngStyle]="{ 'background-color': absenceToColor(current.absence.id) }"
         >
           <ul class="absence-list">
+            <li class="absence-list__item"> Номер користувача: {{ current.absence.userId }} </li>
             <li class="absence-list__item"> Початок: {{ current.absence.start | dateFormat : 'D MMMM YYYY р.' }} </li>
             <li class="absence-list__item"> Кінець: {{ current.absence.end | dateFormat : 'D MMMM YYYY р.' }} </li>
             <li class="absence-list__item"> Причина: {{ current.absence.type }} </li>
-            <li class="absence-list__item"> Коментар: {{ current.absence.comment }} </li>
+            <li class="absence-list__item"> Коментар: {{ current.absence.comment || "Відсутній" }} </li>
             <li class="absence-list__buttons">
               <button
                 class="delete-button"

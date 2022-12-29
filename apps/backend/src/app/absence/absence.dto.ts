@@ -2,10 +2,10 @@ import { IsInt, IsString } from 'class-validator';
 
 export class AbsenceDto {
   @IsInt()
-  id: number;
+  id?: number
 
   @IsInt()
-  user_id: number;
+  userId: number;
 
   @IsString()
   start: string;

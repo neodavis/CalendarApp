@@ -1,7 +1,4 @@
-import { userSelector } from './../../../shared/store/users/selectors';
 import { Absence } from '../../../shared/interfaces/absence';
-import { AppState } from '../../../shared/interfaces/app-state';
-import { select, Store } from '@ngrx/store';
 import {
   AbstractControl,
   FormControl,
@@ -15,9 +12,10 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MessageComponent } from '../message/message.component';
 import * as moment from 'moment';
 import * as AbsenceActions from '../../../shared/store/absences/actions';
-import { absenceSelector } from '../../../shared/store/absences/selectors';
 import { Observable, takeUntil, Subject } from 'rxjs';
-import { User } from '../../../shared/interfaces/user';
+import { AppState } from '../../../shared/interfaces/app-state';
+import { Store } from '@ngrx/store';
+import { absenceSelector } from '../../../shared/store/absences/selectors';
 
 export const dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   let start: AbstractControl | null | undefined = control.parent?.get('startControl');
@@ -41,16 +39,13 @@ export class CreationComponent implements OnInit {
   private result: Absence;
   private busyDates: Set<string> = new Set();
   private notifier: Subject<void> = new Subject<void>();
-  private user$: Observable<User | null>;
-  private user: User | null;
 
   constructor(
     private dialogRef: MatDialogRef<CreationComponent>,
     private successDialog: MatDialog,
     private store: Store<AppState>
   ) {
-    this.absences$ = this.store.pipe(select(absenceSelector));
-    this.user$ = this.store.pipe(select(userSelector));
+    this.absences$ = this.store.select(absenceSelector)
   }
 
   public group: FormGroup = new FormGroup({
@@ -72,8 +67,8 @@ export class CreationComponent implements OnInit {
     if (!isBusy) {
       if (this.group.valid) {
         this.result = {
-          id: Math.round((Math.random()*100000)),
-          user_id: Number(this.user?.user_id),
+          id: 1,
+          userId: Number(sessionStorage.getItem('userId')),
           start: this.group.value.startControl,
           end: this.group.value.endControl,
           type: this.group.value.typeControl,
@@ -116,10 +111,6 @@ export class CreationComponent implements OnInit {
           }
         });
       });
-
-      this.user$.pipe(takeUntil(this.notifier)).subscribe((user: User | null) => {
-        this.user = user
-      })
   }
 
   public ngOnDestroy(): void {

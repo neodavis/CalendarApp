@@ -11,8 +11,8 @@ export class AbsenceEffects {
   getAbsences$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AbsenceActions.getAbsences),
-      mergeMap((action: { user_id: number }) => {
-        return this.backendService.getAbsences(action.user_id).pipe(
+      mergeMap(() => {
+        return this.backendService.getAbsences(String(sessionStorage.getItem('token'))).pipe(
           switchMap( async (absences: Absence[]) => AbsenceActions.getAbsencesSuccess({ absences })) );
       }),
       catchError(async (exception) => AbsenceActions.absenceQueryFailure({message: exception.error.message}))
@@ -22,9 +22,9 @@ export class AbsenceEffects {
   deleteAbsence$ = createEffect(() =>
   this.actions$.pipe(
     ofType(AbsenceActions.deleteAbsence),
-    mergeMap((action: { absence_id: number, user_id: number }) => {
-      return this.backendService.deleteAbsence(action.absence_id).pipe(
-        switchMap( async () => AbsenceActions.getAbsences({ user_id: action.user_id }) )
+    mergeMap((action: { absence_id: number }) => {
+      return this.backendService.deleteAbsence(action.absence_id, String(sessionStorage.getItem('token'))).pipe(
+        switchMap( async () => AbsenceActions.getAbsences() )
       );
     }),
     catchError(async (exception) => AbsenceActions.absenceQueryFailure({message: exception.error.message}))
@@ -34,8 +34,8 @@ export class AbsenceEffects {
   this.actions$.pipe(
     ofType(AbsenceActions.createAbsence),
     mergeMap((action: { absence: Absence }) => {
-      return this.backendService.createAbsence(action.absence).pipe(
-        switchMap( async () => AbsenceActions.getAbsences({user_id: action.absence.user_id}) )
+      return this.backendService.createAbsence(action.absence, String(sessionStorage.getItem('token'))).pipe(
+        switchMap( async () => AbsenceActions.getAbsences() )
       );
     }),
     catchError(async (exception) => AbsenceActions.absenceQueryFailure({message: exception.error.message}))
@@ -45,8 +45,8 @@ export class AbsenceEffects {
   this.actions$.pipe(
     ofType(AbsenceActions.editAbsence),
     mergeMap((action: { absence: Absence }) => {
-      return this.backendService.editAbsence(action.absence).pipe(
-        switchMap( async () => AbsenceActions.getAbsences({ user_id: 12312 }) )
+      return this.backendService.editAbsence(action.absence, String(sessionStorage.getItem('token'))).pipe(
+        switchMap( async () => AbsenceActions.getAbsences() )
       );
     }),
     catchError(async (exception) => AbsenceActions.absenceQueryFailure({message: exception.error.message}))

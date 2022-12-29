@@ -1,4 +1,3 @@
-import { UserEffects } from './shared/store/users/effects';
 import { AbsenceEffects } from './shared/store/absences/effects';
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -22,7 +21,6 @@ import { EffectsModule } from '@ngrx/effects';
 import localeUk from '@angular/common/locales/uk';
 import { LoginComponent } from './components/dialogs/login/login.component';
 import { RegisterComponent } from './components/dialogs/register/register.component';
-import { UserReducers } from './shared/store/users/reducers';
 
 registerLocaleData(localeUk, 'uk');
 
@@ -48,7 +46,6 @@ registerLocaleData(localeUk, 'uk');
     HttpClientModule,
     StoreModule.forRoot(),
     StoreModule.forFeature('absences', AbsenceReducers),
-    StoreModule.forFeature('user', UserReducers),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
       logOnly: !isDevMode(),
@@ -58,7 +55,7 @@ registerLocaleData(localeUk, 'uk');
     }),
     StoreModule.forRoot({}, {}),
     EffectsModule.forRoot(),
-    EffectsModule.forFeature([AbsenceEffects, UserEffects]),
+    EffectsModule.forFeature([AbsenceEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'uk' }],

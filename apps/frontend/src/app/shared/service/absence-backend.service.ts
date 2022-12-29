@@ -11,20 +11,20 @@ import { User } from '../interfaces/user';
 export class AbsenceBackendService {
   constructor(private http: HttpClient) { }
 
-  public getAbsences(user_id: number): Observable<Absence[]> {
-    return this.http.get<Absence[]>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/absences/get/' + user_id)
+  public getAbsences(token: string): Observable<Absence[]> {
+    return this.http.get<Absence[]>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/absences/get/' + token)
   }
   
-  public deleteAbsence(id: number): Observable<DeleteResult> {
-    return this.http.delete<DeleteResult>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/absence/delete/' + id)
+  public deleteAbsence(id: number, token: string): Observable<DeleteResult> {
+    return this.http.delete<DeleteResult>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/absence/delete/' + id + '/' + token)
   }
 
-  public createAbsence(absence: Absence): Observable<Absence | null> {
-    return this.http.post<Absence | null>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/absence/create/', absence)
+  public createAbsence(absence: Absence, token: string): Observable<Absence | null> {
+    return this.http.post<Absence | null>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/absence/create/' + token, absence)
   }
   
-  public editAbsence(absence: Absence): Observable<Absence | null> {
-    return this.http.patch<Absence | null>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/absence/edit/', absence)
+  public editAbsence(absence: Absence, token: string): Observable<Absence | null> {
+    return this.http.patch<Absence | null>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/absence/edit/' + token, absence)
   }
 
   }

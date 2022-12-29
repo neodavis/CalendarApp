@@ -1,64 +1,56 @@
-import { User } from './../../../../../libs/interfaces/src/lib/user';
-import { UserDto } from './user.dto';
+import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from './user.entity';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Injectable, HttpException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt'
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
     constructor(
-        @InjectRepository(UserEntity)
+        @InjectRepository(UserEntity) 
         private readonly userRepository: Repository<UserEntity>,
-        private JwtService: JwtService,
-    ) {}
+        private readonly jwtService: JwtService
+    ) { }
 
-    public async userLogin(user: UserDto): Promise<{ token: string }> {
-        const target: UserEntity | null = await this.userRepository.findOneBy(
-            { username: user.username }
-        )
-
-        if (target && target.password == user.password) {
-            const token = await this.JwtService.sign({ username: user.username })
-            target.token = token
-            await this.userRepository.save(target)
-            return {
-                token: token
-            };
-        }
-        
-        throw new HttpException("Неправильні дані. Виправте дані та спробуйте ще раз.", 401)
-    }
-
-    public async userAuth(token: string): Promise<{ user_id: number, username: string } | null> {
-        const target: UserEntity | null = await this.userRepository.findOne( 
-            { where: { token: String(token) } } 
-        )
-        
-        try {
-            if (target && await this.JwtService.verify(token)) {
-                return {
-                    user_id: target.user_id,
-                    username: target.username 
-                }
-            }
-        } catch {
-            throw new HttpException("Час сеансу вичерпаний.", 401)
-        }
-
-        return null;
-    }
-
-    public async userRegister(user: User): Promise<UserEntity> {
+    async createUser(username: string, password: string): Promise<UserEntity> {
         try {
             return await this.userRepository.save({
-                user_id: user.user_id,
-                username: user.username,
-                password: user.password,
-            })
+                username: username,
+                password: await bcrypt.hash(password, 7),
+            });
         } catch {
-            throw new HttpException("Користувач з таким ім'ям вже існує", 401)
+            throw new HttpException("Користувач із таким ім'ям вже існує", HttpStatus.BAD_REQUEST)
         }
+        
+    }
+    async userLogin(username: string, password: string): Promise<{ token: string | null }> {
+        const user = await this.userRepository.findOne({where: { username: username }})
+        if (!user || !await bcrypt.compare(password, user.password)) {
+            throw new HttpException("Недійсний логін або пароль", HttpStatus.UNAUTHORIZED)
+        }
+
+        const token = this.jwtService.sign({ userId: user.userId })
+
+        return {
+            token: token
+        };
+    }
+
+    async userAuth(token: string): Promise<UserEntity | null> {
+        try {
+            const data = this.jwtService.verify(token)
+            const user = await this.userRepository.findOne({ where: { userId: data.userId } })
+
+            if (!user) {
+                throw new HttpException("Помилка при пошуку користувача", HttpStatus.BAD_REQUEST)
+            }
+
+            return user;
+        } catch {
+            throw new HttpException("Недійсний токен авторизації", HttpStatus.UNAUTHORIZED)
+        }
+
+
     }
 }

@@ -3,7 +3,6 @@ import { Absence } from '../../interfaces/absence';
 
 export const getAbsences = createAction(
   '[Absence] Get Absences',
-  props<{ user_id: number }>()
 );
 
 export const getAbsencesSuccess = createAction(
@@ -23,7 +22,7 @@ export const editAbsence = createAction(
 
 export const deleteAbsence = createAction(
   '[Absence] Delete Absence',
-  props<{ absence_id: number, user_id: number }>()
+  props<{ absence_id: number }>()
 );
 
 export const absenceQueryFailure = createAction(

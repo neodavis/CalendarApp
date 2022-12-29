@@ -1,4 +1,5 @@
-import { UserService } from './user/user.service';
+import { UserController } from './user/user.controller';
+import { AbsenceController } from './absence/absence.controller';
 import { UserEntity } from './user/user.entity';
 import { AbsenceEntity } from './absence/absence.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -7,6 +8,7 @@ import { AppController } from './app.controller';
 import config from '../../ormconfig';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -14,10 +16,10 @@ import { JwtModule } from '@nestjs/jwt';
     TypeOrmModule.forFeature([AbsenceEntity, UserEntity]),
     JwtModule.register({
       secret: 'secret',
-      signOptions: { expiresIn: '15m' }
-    })
+      signOptions: { expiresIn: '15m' },
+    }),
   ],
-  controllers: [AppController],
+  controllers: [AppController, AbsenceController, UserController],
   providers: [AbsenceService, UserService],
 })
 export class AppModule {}
