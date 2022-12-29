@@ -13,6 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class RegisterComponent {
   public error: string | null = null;
+  public loading: boolean = false;
   constructor(
     private dialogRef: MatDialogRef<RegisterComponent>,
     private userService: UserBackendService
@@ -24,6 +25,7 @@ export class RegisterComponent {
   });
 
   public submit(): void {
+    this.loading = true;
     this.userService
       .userRegister({
         user_id: -1,
@@ -34,10 +36,12 @@ export class RegisterComponent {
       .subscribe({
         next: (response: User) => {
           if (response) {
+            this.loading = false;
             this.close();
           }
         },
         error: (error: HttpErrorResponse) => {
+          this.loading = false;
           this.error = error.error.message;
         },
       });

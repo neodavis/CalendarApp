@@ -14,6 +14,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
+  public loading: boolean = false;
   public error: string | null = null
   constructor(
     private dialogRef: MatDialogRef<LoginComponent>,
@@ -27,15 +28,18 @@ export class LoginComponent {
   })
 
   public submit(): void {
+    this.loading = true;
     this.userService.userLogin(this.group.value.username, this.group.value.password).pipe(take(1)).subscribe({
       next: (response: { token: string} ) => {
         if (response.token) {
             this.error = null;
+            this.loading = false
             sessionStorage.setItem('token', response.token)
             this.store.dispatch(AbsenceActions.getAbsences())
             this.close()
       }},
       error: (error: HttpErrorResponse) => {
+        this.loading = false
         this.error = error.error.message
       }})
     } 
