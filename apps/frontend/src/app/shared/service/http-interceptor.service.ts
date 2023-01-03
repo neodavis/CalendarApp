@@ -5,11 +5,14 @@ import { catchError, Observable, throwError } from "rxjs";
 @Injectable()
 export class HttpInterceptorService implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        req = req.clone({
-            setHeaders: {
-                Authorization: "Bearer " + sessionStorage.getItem('token')
-            }
-        });
+        if (req.url.indexOf("/user/") == -1) {
+            req = req.clone({
+                setHeaders: {
+                    Authorization: "Bearer " + sessionStorage.getItem('token')
+                }
+            });
+        }
+
         return next.handle(req);
     }
 }
