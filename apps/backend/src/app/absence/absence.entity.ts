@@ -7,7 +7,7 @@ export class AbsenceEntity {
 
   @Column()
   userId: number;
-  
+
   @Column()
   start: Date;
 

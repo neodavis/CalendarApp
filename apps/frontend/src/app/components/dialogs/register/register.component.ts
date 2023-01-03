@@ -17,7 +17,7 @@ export class RegisterComponent {
   constructor(
     private dialogRef: MatDialogRef<RegisterComponent>,
     private userService: UserBackendService
-  ) {}
+  ) { }
 
   public group: FormGroup = new FormGroup({
     username: new FormControl('', [Validators.required]),
@@ -27,11 +27,10 @@ export class RegisterComponent {
   public submit(): void {
     this.loading = true;
     this.userService
-      .userRegister({
-        user_id: -1,
-        username: this.group.value.username,
-        password: this.group.value.password,
-      })
+      .userRegister(
+        this.group.value.username,
+        this.group.value.password,
+      )
       .pipe(take(1))
       .subscribe({
         next: (response: User) => {

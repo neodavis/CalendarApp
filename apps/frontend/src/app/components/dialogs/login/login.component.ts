@@ -29,7 +29,10 @@ export class LoginComponent {
 
   public submit(): void {
     this.loading = true;
-    this.userService.userLogin(this.group.value.username, this.group.value.password).pipe(take(1)).subscribe({
+    this.userService.userLogin(
+      this.group.value.username,
+      this.group.value.password,
+    ).pipe(take(1)).subscribe({
       next: (response: { token: string} ) => {
         if (response.token) {
             this.error = null;

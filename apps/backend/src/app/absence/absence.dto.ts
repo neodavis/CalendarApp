@@ -2,7 +2,7 @@ import { IsInt, IsString } from 'class-validator';
 
 export class AbsenceDto {
   @IsInt()
-  id?: number
+  id?: number;
 
   @IsInt()
   userId: number;

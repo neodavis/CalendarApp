@@ -1,3 +1,4 @@
+import { HttpInterceptorService } from './shared/service/http-interceptor.service';
 import { AbsenceEffects } from './shared/store/absences/effects';
 import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -16,7 +17,7 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { StoreModule } from '@ngrx/store';
 import { AbsenceReducers } from './shared/store/absences/reducers';
 import { EditorComponent } from './components/dialogs/editor/editor.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import localeUk from '@angular/common/locales/uk';
 import { LoginComponent } from './components/dialogs/login/login.component';
@@ -58,7 +59,10 @@ registerLocaleData(localeUk, 'uk');
     EffectsModule.forFeature([AbsenceEffects]),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: !isDevMode() }),
   ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'uk' }],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'uk' },
+    { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

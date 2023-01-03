@@ -1,3 +1,5 @@
+import { LocalStrategy } from './auth/local.strategy';
+import { JwtStrategy } from './auth/jwt.strategy';
 import { UserController } from './user/user.controller';
 import { AbsenceController } from './absence/absence.controller';
 import { UserEntity } from './user/user.entity';
@@ -20,6 +22,6 @@ import { UserService } from './user/user.service';
     }),
   ],
   controllers: [AppController, AbsenceController, UserController],
-  providers: [AbsenceService, UserService],
+  providers: [AbsenceService, UserService, LocalStrategy, JwtStrategy],
 })
-export class AppModule {}
+export class AppModule { }

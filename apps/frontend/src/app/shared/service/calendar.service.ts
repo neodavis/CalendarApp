@@ -19,11 +19,11 @@ export class CalendarService {
   }
 
   public createCalendar(absenceArray: Absence[]): Week[] {
-    let now = this.date.value
+    let now = this.date.value;
     let startOf = now.clone().startOf('month').startOf('week');
     let endOf = now.clone().endOf('month').endOf('week');
     let date = startOf.clone().subtract(1, 'day');
-    let calendar: Array<any> = [];
+    let calendar: Array<Week> = [];
 
     while (date.isBefore(endOf, 'day')) {
       calendar.push({

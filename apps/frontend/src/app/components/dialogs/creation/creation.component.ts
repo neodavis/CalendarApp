@@ -45,7 +45,7 @@ export class CreationComponent implements OnInit {
     private successDialog: MatDialog,
     private store: Store<AppState>
   ) {
-    this.absences$ = this.store.select(absenceSelector)
+    this.absences$ = this.store.select(absenceSelector);
   }
 
   public group: FormGroup = new FormGroup({
@@ -58,38 +58,28 @@ export class CreationComponent implements OnInit {
   public submit(): void {
     let isBusy = false;
     this.busyDates.forEach((date: string) => {
-      if (moment(date).isBetween( moment(this.group.value.startControl), moment(this.group.value.endControl), 'day', '[]')) {
+      if (moment(date).isBetween(moment(this.group.value.startControl), moment(this.group.value.endControl), 'day', '[]')) {
         isBusy = true;
         return false;
       }
       return true;
     });
-    if (!isBusy) {
-      if (this.group.valid) {
-        this.result = {
-          id: 1,
-          userId: Number(sessionStorage.getItem('userId')),
-          start: this.group.value.startControl,
-          end: this.group.value.endControl,
-          type: this.group.value.typeControl,
-          comment: this.group.value.commentControl,
-        };
+    if (!isBusy && this.group.valid) {
+      this.result = {
+        id: 1,
+        userId: Number(sessionStorage.getItem('userId')),
+        start: this.group.value.startControl,
+        end: this.group.value.endControl,
+        type: this.group.value.typeControl,
+        comment: this.group.value.commentControl,
+      };
 
-        this.store.dispatch(AbsenceActions.createAbsence({ absence: this.result }));
-        this.dialogRef.close();
-        this.successDialog.open(MessageComponent, {
-          data: {
-            title: 'Запит успішно надіслано',
-            details: 'Чекайте на відповідь найближчим часом',
-          },
-        });
-      }
-    } else {
+      this.store.dispatch(AbsenceActions.createAbsence({ absence: this.result }));
       this.dialogRef.close();
       this.successDialog.open(MessageComponent, {
         data: {
-          title: 'Обраний проміжок не доступний',
-          details: 'Оберіть інший та сбробуйте ще раз',
+          title: 'Запит успішно надіслано',
+          details: 'Чекайте на відповідь найближчим часом',
         },
       });
     }

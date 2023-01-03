@@ -36,7 +36,7 @@ export class EditorComponent {
   private notifier: Subject<void> = new Subject<void>();
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) private data: { absence: Absence },
+    @Inject(MAT_DIALOG_DATA) private data: { absence: Absence; },
     private dialogRef: MatDialogRef<EditorComponent>,
     private successDialog: MatDialog,
     private store: Store<AppState>
@@ -46,51 +46,39 @@ export class EditorComponent {
 
   public group: FormGroup = new FormGroup({
     typeControl: new FormControl(this.data.absence.type, [Validators.required]),
-    startControl: new FormControl(moment(this.data.absence.start).toDate(), [ Validators.required, dateValidator ]),
-    endControl: new FormControl(moment(this.data.absence.end).toDate(), [ Validators.required, dateValidator ]),
+    startControl: new FormControl(moment(this.data.absence.start).toDate(), [Validators.required, dateValidator]),
+    endControl: new FormControl(moment(this.data.absence.end).toDate(), [Validators.required, dateValidator]),
     commentControl: new FormControl(this.data.absence.comment),
   });
 
   public submit(): void {
     let isBusy = false;
     this.busyDates.forEach((date) => {
-      if (moment(date).isBetween( moment(this.group.value.startControl), moment(this.group.value.endControl), 'day', '[]')) {
+      if (moment(date).isBetween(moment(this.group.value.startControl), moment(this.group.value.endControl), 'day', '[]')) {
         isBusy = true;
         return false;
       }
       return true;
     });
-    if (!isBusy) {
-      if (this.group.valid) {
-        if (this.group.valid) {
-          this.result = {
-            id: 1,
-            userId: Number(sessionStorage.getItem('userId')),
-            start: this.group.value.startControl,
-            end: this.group.value.endControl,
-            type: this.group.value.typeControl,
-            comment: this.group.value.commentControl,
-          };
+    if (!isBusy && this.group.valid) {
+      this.result = {
+        id: this.data.absence.id,
+        userId: Number(sessionStorage.getItem('userId')),
+        start: this.group.value.startControl,
+        end: this.group.value.endControl,
+        type: this.group.value.typeControl,
+        comment: this.group.value.commentControl,
+      };
 
-        this.store.dispatch(AbsenceActions.editAbsence({ absence: this.result }));
-        this.dialogRef.close();
-        this.successDialog.open(MessageComponent, {
-          data: {
-            title: 'Запит успішно надіслано',
-            details: 'Чекайте на відповідь найближчим часом',
-          },
-        });
-      }
-    } else {
+      this.store.dispatch(AbsenceActions.editAbsence({ absence: this.result }));
       this.dialogRef.close();
       this.successDialog.open(MessageComponent, {
         data: {
-          title: 'Обраний проміжок не доступний',
-          details: 'Оберіть інший та сбробуйте ще раз',
+          title: 'Запит успішно надіслано',
+          details: 'Чекайте на відповідь найближчим часом',
         },
       });
     }
-  }
   }
   public close(): void {
     this.dialogRef.close();
@@ -102,7 +90,7 @@ export class EditorComponent {
         absences.forEach((absence: Absence) => {
           let date = moment(absence.start).clone();
           while (date.isSameOrBefore(absence.end)) {
-            if (!moment(date).isBetween( this.group.value.startControl, this.group.value.endControl, 'day', '[]')) {
+            if (!moment(date).isBetween(this.group.value.startControl, this.group.value.endControl, 'day', '[]')) {
               this.busyDates.add(date.toDate().toString());
             }
             date.add(1, 'day');

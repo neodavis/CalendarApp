@@ -1,25 +1,22 @@
 import { UserEntity } from './user.entity';
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
-import { UserDto } from "./user.dto";
+import { AuthGuard } from '@nestjs/passport';
+import { Body, Controller, Request, Post, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
+import { UserDto } from './user.dto';
+
 
 @Controller()
 export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Post('user/register')
-    async createUser(@Body() body: UserDto): Promise<UserEntity> {
-        return this.userService.createUser(body.username, body.password)
+    public async createUser(@Body() user: UserDto): Promise<UserEntity> {
+        return this.userService.create(user);
     }
 
+    @UseGuards(AuthGuard('local'))
     @Post('user/login')
-    async userLogin(@Body() body: UserDto): Promise<{ token: string | null }> {
-        const token = await this.userService.userLogin(body.username, body.password)
-        return token;
-    }
-
-    @Get('user/auth/:token')
-    async userAuth(@Param('token') token: string): Promise<UserEntity | null> {
-        return this.userService.userAuth(token)
+    public async userLogin(@Request() req: { user: UserEntity; }): Promise<{ token: string; }> {
+        return this.userService.login(req.user);
     }
 }

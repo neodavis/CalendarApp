@@ -12,9 +12,9 @@ export const absenceSelector = createSelector(
 export const isLoadingSelector = createSelector(
   selectFeature,
   (state: AbsencesState) => state.isLoading
-)
+);
 
 export const errorSelector = createSelector(
   selectFeature,
   (state: AbsencesState) => state.error
-)
+);

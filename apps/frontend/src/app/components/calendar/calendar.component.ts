@@ -22,7 +22,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   private absences$: Observable<Absence[]>;
   private absences: Absence[];
   private notifier: Subject<void> = new Subject<void>();
-  public date: BehaviorSubject<moment.Moment> = this.calendarService.getDate()
+  public date: BehaviorSubject<moment.Moment> = this.calendarService.getDate();
   public isLoading$: Observable<Boolean>;
   public error$: Observable<string | null>;
   public calendar: Week[];
@@ -41,24 +41,24 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   public nextMonth(): void {
     this.calendarService.changeMonth(1);
-    this.calendar = this.calendarService.createCalendar( this.absences );
+    this.calendar = this.calendarService.createCalendar(this.absences);
   }
 
   public prevMonth(): void {
     this.calendarService.changeMonth(-1);
-    this.calendar = this.calendarService.createCalendar( this.absences );
+    this.calendar = this.calendarService.createCalendar(this.absences);
   }
   public currentMonth(): void {
     this.calendarService.setToMonthCurrent();
-    this.calendar = this.calendarService.createCalendar( this.absences );
+    this.calendar = this.calendarService.createCalendar(this.absences);
   }
 
   public updateAbsences(): void {
-    this.store.dispatch(AbsenceActions.getAbsences())
+    this.store.dispatch(AbsenceActions.getAbsences());
   }
 
   public absenceToColor(absenseId: number): string {
-    return `#${ (absenseId * 999999).toString(16).slice(0, 6) }`;
+    return `#${(absenseId * 999999).toString(16).slice(0, 6)}`;
   }
 
   public getDateDetails(day: Day): void {
@@ -95,9 +95,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
         });
       }
     });
-    
+
     if (sessionStorage.getItem('token')) {
-      this.store.dispatch(AbsenceActions.getAbsences())
+      this.store.dispatch(AbsenceActions.getAbsences());
     }
   }
 

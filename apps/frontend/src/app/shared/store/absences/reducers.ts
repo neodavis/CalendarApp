@@ -16,7 +16,7 @@ export const AbsenceReducers = createReducer(
     return { ...state, isLoading: true, error: null };
   }),
 
-  on(AbsenceActions.getAbsencesSuccess, (state: AbsencesState, action: { absences: Absence[] }): AbsencesState => {
+  on(AbsenceActions.getAbsencesSuccess, (state: AbsencesState, action: { absences: Absence[]; }): AbsencesState => {
     return { ...state, absences: action.absences, isLoading: false, error: null };
   }),
 
@@ -30,13 +30,13 @@ export const AbsenceReducers = createReducer(
     }
   ),
   on(
-    AbsenceActions.deleteAbsence, (state: AbsencesState): AbsencesState => { 
-      return { ...state, isLoading: true, error: null } ;
+    AbsenceActions.deleteAbsence, (state: AbsencesState): AbsencesState => {
+      return { ...state, isLoading: true, error: null };
     }
   ),
   on(
-    AbsenceActions.absenceQueryFailure, (state: AbsencesState, action: { message: string }): AbsencesState => {
-      return { ...state, isLoading: false, error: action.message }; 
+    AbsenceActions.absenceQueryFailure, (state: AbsencesState, action: { message: string; }): AbsencesState => {
+      return { ...state, isLoading: false, error: action.message };
     }
   )
 
