@@ -1,0 +1,23 @@
+<div class="container" [ngClass]="{ 'loading': loading }">
+  <h3>Регестрація:</h3>
+  <p> {{error}} </p>
+
+  <form [formGroup]="group" class="login-form">
+    <mat-form-field appearance="fill">
+      <mat-label>Логін</mat-label>
+      <input matInput formControlName="username">
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Пароль</mat-label>
+      <input matInput formControlName="password">
+    </mat-form-field>
+    <div class="button-container">
+      <button mat-raised-button color="primary" (click)="submit()" class="modal-control">
+        Надіслати запит
+      </button>
+    </div>
+  </form>
+
+
+</div>

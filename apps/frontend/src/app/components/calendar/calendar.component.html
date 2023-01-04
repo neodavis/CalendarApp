@@ -1,20 +1,15 @@
-
-<mat-spinner class="loading-spinner" *ngIf="isLoading$ | async"></mat-spinner>
 <div *ngIf="(error$ | async)">
   <mat-card class="error-container">
     Error: {{ error$ | async }}
   </mat-card>
-</div> 
-<div class="container" *ngIf="!(isLoading$ | async)">
+</div>
+<div class="container">
   <mat-card class="calendar-body">
     <ul class="calendar-control">
       <li class="control-prev">
         <button mat-raised-button color="primary" (click)="prevMonth()">
-          <
-        </button>
-      </li>
-      <li class="control-month">
-        {{ date | async | dateFormat | titlecase }}
+          < </button> </li> <li class="control-month">
+            {{ date | async | dateFormat | titlecase }}
       </li>
       <li class="control-next">
         <button mat-raised-button color="primary" (click)="nextMonth()">
@@ -27,7 +22,10 @@
         </button>
       </li>
     </ul>
-    <table class="calendar-table">
+    <button class="button-update" mat-raised-button color="accent" (click)="updateAbsences()"
+      *ngIf="sessionStorage.getItem('token')">Оновити</button>
+    <mat-spinner class="loading-spinner" *ngIf="isLoading$ | async"></mat-spinner>
+    <table class="calendar-table" *ngIf="!(isLoading$ | async)">
       <thead class="table-head">
         <tr class="table-head__row">
           <th class="table-head__cell">Понеділок</th>
@@ -41,19 +39,12 @@
       </thead>
       <tbody class="table-body">
         <tr *ngFor="let week of calendar" class="table-body__row">
-          <td
-            *ngFor="let day of week.days"
-            class="table-body__cell"
-            [ngClass]="{ disabled: day.disabled, today: day.current }"
-            (click)="getDateDetails(day)"
-          >
+          <td *ngFor="let day of week.days" class="table-body__cell"
+            [ngClass]="{ disabled: day.disabled, today: day.current }" (click)="getDateDetails(day)">
             <span>{{ day.value.format('DD') }}</span>
             <ul class="abcense-list" *ngIf="day.absence">
-              <li
-                class="abcense-list__item"
-                (click)="openEditorDialog(day.absence)"
-                [ngStyle]="{ 'background-color': absenceToColor(day.absence) }"
-              >
+              <li class="abcense-list__item" (click)="openEditorDialog(day.absence)"
+                [ngStyle]="{ 'background-color': absenceToColor(day.absence.id) }">
                 Тип: {{ day.absence.type }}
               </li>
             </ul>
@@ -70,22 +61,16 @@
       </li>
       <ul>
         <li>Дата: {{ current.value.format('LL') }}</li>
-        <mat-card
-          *ngIf="current.absence"
-          class="details-card"
-          [ngStyle]="{ 'background-color': absenceToColor(current.absence) }"
-        >
+        <mat-card *ngIf="current.absence" class="details-card"
+          [ngStyle]="{ 'background-color': absenceToColor(current.absence.id) }">
           <ul class="absence-list">
+            <li class="absence-list__item"> Номер користувача: {{ current.absence.userId }} </li>
             <li class="absence-list__item"> Початок: {{ current.absence.start | dateFormat : 'D MMMM YYYY р.' }} </li>
             <li class="absence-list__item"> Кінець: {{ current.absence.end | dateFormat : 'D MMMM YYYY р.' }} </li>
             <li class="absence-list__item"> Причина: {{ current.absence.type }} </li>
-            <li class="absence-list__item"> Коментар: {{ current.absence.comment }} </li>
+            <li class="absence-list__item"> Коментар: {{ current.absence.comment || "Відсутній" }} </li>
             <li class="absence-list__buttons">
-              <button
-                class="delete-button"
-                mat-raised-button
-                color="warn"
-                (click)="deleteAbsence(current.absence.id)"> 
+              <button class="delete-button" mat-raised-button color="warn" (click)="deleteAbsence(current.absence.id)">
                 Видалити запис
               </button>
             </li>

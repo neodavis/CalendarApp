@@ -1,30 +1,32 @@
 import { createAction, props } from '@ngrx/store';
-import { Absence } from '../interfaces/absence';
+import { Absence } from '../../interfaces/absence';
 
-export const getAbsences = createAction('[Absence] Get Absences');
+export const getAbsences = createAction(
+  '[Absence] Get Absences',
+);
 
 export const getAbsencesSuccess = createAction(
   '[Absence] Get Absences Success',
-  props<{ absences: Absence[]} >()
+  props<{ absences: Absence[]; }>()
 );
 
 export const createAbsence = createAction(
   '[Absence] Create Absence',
-  props<{ absence: Absence }>()
+  props<{ absence: Absence; }>()
 );
 
 export const editAbsence = createAction(
   '[Absence] Edit Absence',
-  props<{ absence: Absence }>()
+  props<{ absence: Absence; }>()
 );
 
 export const deleteAbsence = createAction(
   '[Absence] Delete Absence',
-  props<{ id: number }>()
+  props<{ id: number; }>()
 );
 
-export const absenceErrorHandler = createAction(
-  '[Absence] Absence Error',
-  props<{ message: string }>()
+export const absenceQueryFailure = createAction(
+  '[Absence] Absence Query Error',
+  props<{ message: string; }>()
 );
 

@@ -1,6 +1,4 @@
 import { Absence } from '../../../shared/interfaces/absence';
-import { AppState } from '../../../shared/interfaces/app-state';
-import { select, Store } from '@ngrx/store';
 import {
   AbstractControl,
   FormControl,
@@ -9,17 +7,15 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { Component, Inject, OnInit } from '@angular/core';
-import {
-  MatDialog,
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MessageComponent } from '../message/message.component';
 import * as moment from 'moment';
-import * as AbsenceActions from '../../../shared/store/actions';
-import { absenceSelector } from '../../../shared/store/selectors';
+import * as AbsenceActions from '../../../shared/store/absences/actions';
 import { Observable, takeUntil, Subject } from 'rxjs';
+import { AppState } from '../../../shared/interfaces/app-state';
+import { Store } from '@ngrx/store';
+import { absenceSelector } from '../../../shared/store/absences/selectors';
 
 export const dateValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   let start: AbstractControl | null | undefined = control.parent?.get('startControl');
@@ -49,7 +45,7 @@ export class CreationComponent implements OnInit {
     private successDialog: MatDialog,
     private store: Store<AppState>
   ) {
-    this.absences$ = this.store.pipe(select(absenceSelector));
+    this.absences$ = this.store.select(absenceSelector);
   }
 
   public group: FormGroup = new FormGroup({
@@ -62,37 +58,28 @@ export class CreationComponent implements OnInit {
   public submit(): void {
     let isBusy = false;
     this.busyDates.forEach((date: string) => {
-      if (moment(date).isBetween( moment(this.group.value.startControl), moment(this.group.value.endControl), 'day', '[]')) {
+      if (moment(date).isBetween(moment(this.group.value.startControl), moment(this.group.value.endControl), 'day', '[]')) {
         isBusy = true;
         return false;
       }
       return true;
     });
-    if (!isBusy) {
-      if (this.group.valid) {
-        this.result = {
-          id: Math.round((Math.random()*100000)),
-          start: this.group.value.startControl,
-          end: this.group.value.endControl,
-          type: this.group.value.typeControl,
-          comment: this.group.value.commentControl,
-        };
+    if (!isBusy && this.group.valid) {
+      this.result = {
+        id: 1,
+        userId: Number(sessionStorage.getItem('userId')),
+        start: this.group.value.startControl,
+        end: this.group.value.endControl,
+        type: this.group.value.typeControl,
+        comment: this.group.value.commentControl,
+      };
 
-        this.store.dispatch(AbsenceActions.createAbsence({ absence: this.result }));
-        this.dialogRef.close();
-        this.successDialog.open(MessageComponent, {
-          data: {
-            title: 'Запит успішно надіслано',
-            details: 'Чекайте на відповідь найближчим часом',
-          },
-        });
-      }
-    } else {
+      this.store.dispatch(AbsenceActions.createAbsence({ absence: this.result }));
       this.dialogRef.close();
       this.successDialog.open(MessageComponent, {
         data: {
-          title: 'Обраний проміжок не доступний',
-          details: 'Оберіть інший та сбробуйте ще раз',
+          title: 'Запит успішно надіслано',
+          details: 'Чекайте на відповідь найближчим часом',
         },
       });
     }

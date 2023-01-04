@@ -11,11 +11,13 @@
   height: 100px;
   list-style-type: none;
   padding: 0;
-
-  .nav-button__container {
-    display: flex;
-  }
 }
+
+.button-container {
+  display: flex;
+  gap: 5px;
+}
+
 
 .title {
   margin: 0;

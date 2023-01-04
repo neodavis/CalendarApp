@@ -1,6 +1,7 @@
+import { JwtService } from '@nestjs/jwt';
 import { AbsenceDto } from './absence.dto';
 import { AbsenceEntity } from './absence.entity';
-import { HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, Repository } from 'typeorm';
 import moment = require('moment');
@@ -9,42 +10,44 @@ Injectable();
 export class AbsenceService {
   constructor(
     @InjectRepository(AbsenceEntity)
-    private readonly absenceRepository: Repository<AbsenceEntity>
-  ) {}
+    private readonly absenceRepository: Repository<AbsenceEntity>,
+    private readonly jwtService: JwtService
+  ) { }
 
-  public getAbsences(): Promise<AbsenceEntity[]> {
-    return this.absenceRepository.find();
+  public async getAbsences(token: string): Promise<AbsenceEntity[]> {
+    try {
+      token = token.replace('Bearer ', '');
+      const user = this.jwtService.verify(token);
+
+      return await this.absenceRepository.find({ where: { userId: user.userId } });
+    } catch {
+      throw new HttpException('Помилка при запиті записів', HttpStatus.BAD_REQUEST);
+    }
   }
 
   public async deleteAbsence(id: number): Promise<DeleteResult> {
-      try {
-        return await this.absenceRepository.delete({ id: id })
-      } catch {
-        throw new HttpException('Abcense Delete Error', HttpStatus.BAD_REQUEST)
-      }   
+    try {
+      return await this.absenceRepository.delete({ id: id });
+    } catch {
+      throw new HttpException('Помилка при видаленні запису', HttpStatus.BAD_REQUEST);
+    }
   }
 
-  public async createAbsence(absence: AbsenceDto): Promise<AbsenceEntity> {
-    let absenceEntity: AbsenceEntity = new AbsenceEntity();
-
-    absenceEntity.id = absence.id;
-    absenceEntity.start = moment(absence.start).toDate();
-    absenceEntity.end = moment(absence.end).toDate();
-    absenceEntity.comment = absence.comment;
-    absenceEntity.type = absence.type;
-    
-    try {
-      return await this.absenceRepository.save({
-        id: absence.id,
-        start: moment(absence.start).toDate(),
-        end: moment(absence.end).toDate(),
-        comment: absence.comment,
-        type: absence.type,
-      })
-    } catch {
-      throw new HttpException('Abcense Create Exception', HttpStatus.BAD_REQUEST)
-    } 
-
+  public async createAbsence(absence: AbsenceDto, token: string): Promise<AbsenceEntity> {
+    token = token.replace('Bearer ', '');
+    const user = this.jwtService.verify(token);
+    return await this.absenceRepository.save({
+      id: absence.id,
+      userId: Number(user.userId),
+      start: moment(absence.start).toDate(),
+      end: moment(absence.end).toDate(),
+      comment: absence.comment,
+      type: absence.type,
+    });
+    // try {
+    // } catch {
+    //   throw new HttpException('Помилка при створенні запису', HttpStatus.BAD_REQUEST);
+    // }
   }
 
   public async editAbsence(absence: AbsenceDto): Promise<AbsenceEntity> {
@@ -57,8 +60,7 @@ export class AbsenceService {
         type: absence.type,
       });
     } catch {
-      throw new HttpException('Absence Edit Exception', HttpStatus.BAD_REQUEST)
-    } 
-
+      throw new HttpException('Помилка при зміні запису', HttpStatus.BAD_REQUEST);
+    }
   }
 }

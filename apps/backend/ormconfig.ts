@@ -1,3 +1,4 @@
+import { UserEntity } from './src/app/user/user.entity';
 import { AbsenceEntity } from './src/app/absence/absence.entity';
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 
@@ -9,7 +10,7 @@ const config: PostgresConnectionOptions = {
     password: "aoLm9QPEKhyYQZxVzOtM",
     database: "railway",
     synchronize: true,
-    entities: [AbsenceEntity],
+    entities: [AbsenceEntity, UserEntity],
 }
 
 export default config;
