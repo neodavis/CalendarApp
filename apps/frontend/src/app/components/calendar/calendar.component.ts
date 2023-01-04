@@ -1,3 +1,5 @@
+import { Router } from '@angular/router';
+import { HttpException, UnauthorizedException } from '@nestjs/common';
 import { isLoadingSelector, absenceSelector, errorSelector } from './../../shared/store/absences/selectors';
 import * as AbsenceActions from '../../shared/store/absences/actions';
 import { AppState } from '../../shared/interfaces/app-state';
@@ -37,7 +39,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
   constructor(
     private dialog: MatDialog,
     private calendarService: CalendarService,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private route: Router
   ) {
     this.absences$ = this.store.pipe(select(absenceSelector));
     this.isLoading$ = this.store.pipe(select(isLoadingSelector));
@@ -95,6 +98,13 @@ export class CalendarComponent implements OnInit, OnDestroy {
           return this.current.value.isBetween(absence.start, absence.end, 'day');
         })
       };
+    });
+
+    this.error$.pipe(takeUntil(this.notifier)).subscribe((error: string | null) => {
+      if (error === "Unauthorized") {
+        this.sessionStorage.removeItem('token');
+        this.route.navigate(['/login']);
+      }
     });
   }
 
