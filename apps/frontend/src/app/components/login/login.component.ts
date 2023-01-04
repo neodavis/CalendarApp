@@ -36,9 +36,9 @@ export class LoginComponent {
       ).pipe(take(1)).subscribe({
         next: (response: { token: string; }) => {
           if (response.token) {
+            sessionStorage.setItem('token', response.token);
             this.error = null;
             this.loading = false;
-            sessionStorage.setItem('token', response.token);
             this.router.navigate(['/calendar']);
           }
         },

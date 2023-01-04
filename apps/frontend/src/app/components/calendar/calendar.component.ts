@@ -26,7 +26,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
   public isLoading$: Observable<Boolean>;
   public error$: Observable<string | null>;
   public calendar: Week[];
-  public current: Day;
+  public current: Day = {
+    value: moment(),
+    current: true,
+    disabled: false,
+    absence: undefined
+  };
   public sessionStorage: Storage = sessionStorage;
 
   constructor(
@@ -82,20 +87,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.absences$.pipe(takeUntil(this.notifier)).subscribe((absences: Absence[]) => {
       this.calendar = this.calendarService.createCalendar(absences);
       this.absences = absences;
-      if (!this.current) {
-        this.current = {
-          value: moment(),
-          disabled: false,
-          current: true,
-          absence: absences.find((absence: Absence) => {
-            return this.current.value.isBetween(absence.start, absence.end, 'day');
-          })
-        };
-      } else {
-        this.current.absence = absences.find((absence: Absence) => {
+      this.current = {
+        value: moment(),
+        disabled: false,
+        current: true,
+        absence: absences.find((absence: Absence) => {
           return this.current.value.isBetween(absence.start, absence.end, 'day');
-        });
-      }
+        })
+      };
     });
   }
 

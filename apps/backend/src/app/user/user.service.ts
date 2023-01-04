@@ -39,7 +39,7 @@ export class UserService {
         }
     }
 
-    public async login(body: UserEntity): Promise<{ token: string; }> {
+    public async login(body: UserDto): Promise<{ token: string; }> {
         const user = await this.userRepository.findOne({ where: { username: body.username } });
         return {
             token: this.jwtService.sign({ userId: user?.userId })

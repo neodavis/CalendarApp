@@ -21,8 +21,8 @@ export class RegisterComponent {
   ) { }
 
   public group: FormGroup = new FormGroup({
-    username: new FormControl('', [Validators.required]),
-    password: new FormControl('', [Validators.required]),
+    username: new FormControl('', [Validators.required, Validators.minLength(5)]),
+    password: new FormControl('', [Validators.required, Validators.minLength(5)]),
   });
 
   public submit(): void {
@@ -37,9 +37,9 @@ export class RegisterComponent {
         .subscribe({
           next: (response: { token: string; }) => {
             if (response) {
+              sessionStorage.setItem('token', response.token);
               this.error = null;
               this.loading = false;
-              sessionStorage.setItem('token', response.token);
               this.router.navigate(['/calendar']);
             }
           },

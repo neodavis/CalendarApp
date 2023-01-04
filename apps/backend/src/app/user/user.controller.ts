@@ -1,6 +1,5 @@
-import { UserEntity } from './user.entity';
 import { AuthGuard } from '@nestjs/passport';
-import { Body, Controller, Request, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { UserDto } from './user.dto';
 
@@ -16,7 +15,7 @@ export class UserController {
 
     @UseGuards(AuthGuard('local'))
     @Post('user/login')
-    public async userLogin(@Request() req: { user: UserEntity; }): Promise<{ token: string; }> {
-        return this.userService.login(req.user);
+    public async userLogin(@Body() user: UserDto): Promise<{ token: string; }> {
+        return this.userService.login(user);
     }
 }
