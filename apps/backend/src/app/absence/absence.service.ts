@@ -17,41 +17,37 @@ export class AbsenceService {
   public async getAbsences(token: string): Promise<AbsenceEntity[]> {
     try {
       token = token.replace('Bearer ', '');
-      const data = this.jwtService.verify(token);
+      const user = this.jwtService.verify(token);
 
-      return await this.absenceRepository.find({ where: { userId: data.userId } });
+      return await this.absenceRepository.find({ where: { userId: user.userId } });
     } catch {
       throw new HttpException('Помилка при запиті записів', HttpStatus.BAD_REQUEST);
     }
   }
 
-  public async deleteAbsence(id: number, token: string): Promise<DeleteResult> {
+  public async deleteAbsence(id: number): Promise<DeleteResult> {
     try {
-      token = token.replace('Bearer ', '');
-      const data = this.jwtService.verify(token);
-
-      return await this.absenceRepository.delete({ id: id, userId: data.userId });
+      return await this.absenceRepository.delete({ id: id });
     } catch {
       throw new HttpException('Помилка при видаленні запису', HttpStatus.BAD_REQUEST);
     }
   }
 
   public async createAbsence(absence: AbsenceDto, token: string): Promise<AbsenceEntity> {
-    try {
-      token = token.replace('Bearer ', '');
-      const data = this.jwtService.verify(token);
-
-      return await this.absenceRepository.save({
-        id: absence.id,
-        userId: Number(data.userId),
-        start: moment(absence.start).toDate(),
-        end: moment(absence.end).toDate(),
-        comment: absence.comment,
-        type: absence.type,
-      });
-    } catch {
-      throw new HttpException('Помилка при створенні запису', HttpStatus.BAD_REQUEST);
-    }
+    token = token.replace('Bearer ', '');
+    const user = this.jwtService.verify(token);
+    return await this.absenceRepository.save({
+      id: absence.id,
+      userId: Number(user.userId),
+      start: moment(absence.start).toDate(),
+      end: moment(absence.end).toDate(),
+      comment: absence.comment,
+      type: absence.type,
+    });
+    // try {
+    // } catch {
+    //   throw new HttpException('Помилка при створенні запису', HttpStatus.BAD_REQUEST);
+    // }
   }
 
   public async editAbsence(absence: AbsenceDto): Promise<AbsenceEntity> {

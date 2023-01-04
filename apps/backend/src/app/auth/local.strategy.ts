@@ -1,8 +1,7 @@
-import { UserEntity } from './../user/user.entity';
 import { UserService } from './../user/user.service';
 import { Strategy } from 'passport-local';
 import { PassportStrategy } from '@nestjs/passport';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -10,11 +9,11 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         super();
     }
 
-    public async validate(username: string, password: string): Promise<UserEntity> {
+    public async validate(username: string, password: string): Promise<boolean> {
         const user = await this.userService.validate(username, password);
         if (!user) {
-            throw new NotFoundException("Неправильний логін або пароль");
+            throw new UnauthorizedException("Неправильний логін або пароль");
         }
-        return user;
+        return true;
     }
 }

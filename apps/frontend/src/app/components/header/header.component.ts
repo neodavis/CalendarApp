@@ -1,5 +1,5 @@
-import { RegisterComponent } from './../dialogs/register/register.component';
-import { LoginComponent } from './../dialogs/login/login.component';
+import { Router } from '@angular/router';
+import { RegisterComponent } from '../register/register.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Component } from '@angular/core';
 import { CreationComponent } from '../dialogs/creation/creation.component';
@@ -7,6 +7,7 @@ import { AppState } from '../../shared/interfaces/app-state';
 import { Store } from '@ngrx/store';
 import * as AbsenceActions from '../../shared/store/absences/actions';
 import { Observable, takeUntil, Subject } from 'rxjs';
+import { LoginComponent } from "../login/login.component";
 
 
 @Component({
@@ -17,7 +18,8 @@ import { Observable, takeUntil, Subject } from 'rxjs';
 export class HeaderComponent {
   constructor(
     private dialog: MatDialog,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private router: Router
   ) { }
 
   public sessionStorage = sessionStorage;
@@ -41,6 +43,6 @@ export class HeaderComponent {
 
   public logout(): void {
     sessionStorage.removeItem('token');
-    this.store.dispatch(AbsenceActions.getAbsencesSuccess({ absences: [] }));
+    this.router.navigateByUrl('/login');
   }
 }

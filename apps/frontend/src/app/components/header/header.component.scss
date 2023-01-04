@@ -14,27 +14,11 @@
 }
 
 .button-container {
-  display: grid;
+  display: flex;
   gap: 5px;
-  grid-template-areas: "login register"
-                        "create create";
 }
 
-.button-login {
-  grid-area: login;
-}
 
-.button-register {
-  grid-area: register;
-}
-
-.button-create {
-  grid-area: create;
-}
-.button-logout {
-  grid-column-start: login;
-  grid-column-end: register;
-}
 .title {
   margin: 0;
 }

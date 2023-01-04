@@ -9,14 +9,17 @@ import { User } from '../interfaces/user';
 export class UserBackendService {
   constructor(private http: HttpClient) { }
 
+  public path: string = isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app";
+
+
   public userLogin(username: string, password: string): Observable<{ token: string; }> {
-    return this.http.post<{ token: string; }>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/user/login/', {
+    return this.http.post<{ token: string; }>(this.path + '/api/user/login/', {
       username, password
     });
   }
 
   public userRegister(username: string, password: string): Observable<User> {
-    return this.http.post<User>((isDevMode() ? 'http://localhost:3333' : "https://calendarapp-production-6494.up.railway.app") + '/api/user/register/', {
+    return this.http.post<User>(this.path + '/api/user/register/', {
       username, password
     });
   }

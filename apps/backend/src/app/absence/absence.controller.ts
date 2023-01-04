@@ -17,8 +17,8 @@ export class AbsenceController {
 
   @UseGuards(AuthGuard('jwt'))
   @Delete('absence/delete/:id')
-  public async deleteAbsence(@Param('id', ParseIntPipe) id: number, @Headers('Authorization') token: string): Promise<DeleteResult> {
-    return this.absenceService.deleteAbsence(id, token);
+  public async deleteAbsence(@Param('id', ParseIntPipe) id: number): Promise<DeleteResult> {
+    return this.absenceService.deleteAbsence(id);
   }
 
   @UseGuards(AuthGuard('jwt'))

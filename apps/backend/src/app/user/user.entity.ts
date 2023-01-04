@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { AbsenceEntity } from './../absence/absence.entity';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -10,4 +11,7 @@ export class UserEntity {
 
   @Column()
   public password: string;
+
+  @OneToMany(() => AbsenceEntity, (absence: AbsenceEntity) => absence.userId)
+  public absences: AbsenceEntity[];
 }

@@ -95,10 +95,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
         });
       }
     });
-
-    if (sessionStorage.getItem('token')) {
-      this.store.dispatch(AbsenceActions.getAbsences());
-    }
+    this.store.dispatch(AbsenceActions.getAbsences());
   }
 
   public ngOnDestroy(): void {

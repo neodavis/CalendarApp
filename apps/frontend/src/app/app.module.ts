@@ -1,3 +1,4 @@
+import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { HttpInterceptorService } from './shared/service/http-interceptor.service';
 import { AbsenceEffects } from './shared/store/absences/effects';
 import { NgModule, isDevMode } from '@angular/core';
@@ -20,10 +21,19 @@ import { EditorComponent } from './components/dialogs/editor/editor.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import localeUk from '@angular/common/locales/uk';
-import { LoginComponent } from './components/dialogs/login/login.component';
-import { RegisterComponent } from './components/dialogs/register/register.component';
+import { RegisterComponent } from './components/register/register.component';
+import { RouterModule, Routes } from "@angular/router";
+import { LoginComponent } from "./components/login/login.component";
+import { AuthGuard } from "./shared/guard/auth.guard";
 
 registerLocaleData(localeUk, 'uk');
+
+
+const routes: Routes = [
+  { path: '', component: CalendarComponent, canActivate: [AuthGuard] },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+];
 
 @NgModule({
   declarations: [
@@ -35,17 +45,19 @@ registerLocaleData(localeUk, 'uk');
     DateFormatPipe,
     EditorComponent,
     LoginComponent,
-    LoginComponent,
     RegisterComponent,
   ],
   imports: [
     BrowserModule,
+    RouterModule,
+    RouterModule.forRoot(routes),
     BrowserAnimationsModule,
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
     StoreModule.forRoot(),
+    MatDialogModule,
     StoreModule.forFeature('absences', AbsenceReducers),
     StoreDevtoolsModule.instrument({
       maxAge: 25,
@@ -61,8 +73,9 @@ registerLocaleData(localeUk, 'uk');
   ],
   providers: [
     { provide: MAT_DATE_LOCALE, useValue: 'uk' },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true },
+    { provide: AuthGuard }
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
