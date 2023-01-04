@@ -24,12 +24,16 @@ export class UserService {
         return null;
     }
 
-    public async create(user: UserDto): Promise<UserEntity> {
+    public async create(body: UserDto): Promise<{ token: string; }> {
         try {
-            return await this.userRepository.save({
-                username: user.username,
-                password: await bcrypt.hash(user.password, 7)
+            const user = await this.userRepository.save({
+                username: body.username,
+                password: await bcrypt.hash(body.password, 7)
             });
+
+            return {
+                token: this.jwtService.sign({ userId: user.userId })
+            };
         } catch {
             throw new HttpException("Користучач із таким ім'ям вже існує", 401);
         }

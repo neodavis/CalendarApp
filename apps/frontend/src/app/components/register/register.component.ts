@@ -1,10 +1,10 @@
 import { Router } from '@angular/router';
 import { UserBackendService } from '../../shared/service/user-backend.service';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs';
 import { User } from '../../shared/interfaces/user';
 import { HttpErrorResponse } from '@angular/common/http';
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-register',
@@ -35,10 +35,12 @@ export class RegisterComponent {
         )
         .pipe(take(1))
         .subscribe({
-          next: (response: User) => {
+          next: (response: { token: string; }) => {
             if (response) {
+              this.error = null;
               this.loading = false;
-              this.router.navigate(['/login']);
+              sessionStorage.setItem('token', response.token);
+              this.router.navigate(['/calendar']);
             }
           },
           error: (error: HttpErrorResponse) => {

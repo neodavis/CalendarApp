@@ -30,9 +30,10 @@ registerLocaleData(localeUk, 'uk');
 
 
 const routes: Routes = [
-  { path: '', component: CalendarComponent, canActivate: [AuthGuard] },
+  { path: 'calendar', component: CalendarComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
+  { path: "**", redirectTo: 'calendar' }
 ];
 
 @NgModule({

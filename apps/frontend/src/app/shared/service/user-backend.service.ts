@@ -18,8 +18,8 @@ export class UserBackendService {
     });
   }
 
-  public userRegister(username: string, password: string): Observable<User> {
-    return this.http.post<User>(this.path + '/api/user/register/', {
+  public userRegister(username: string, password: string): Observable<{ token: string; }> {
+    return this.http.post<{ token: string; }>(this.path + '/api/user/register/', {
       username, password
     });
   }

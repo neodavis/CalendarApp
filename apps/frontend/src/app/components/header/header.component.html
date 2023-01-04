@@ -4,8 +4,6 @@
       <h1 class="title">Календарне планування</h1>
     </li>
     <div class="button-container">
-      <button class="button-login" mat-raised-button color="primary" routerLink="/"
-        *ngIf="sessionStorage.getItem('token')">Головна</button>
       <button class="button-login" mat-raised-button color="accent" routerLink="/login"
         *ngIf="!sessionStorage.getItem('token')">Вхід</button>
       <button class="button-register" mat-raised-button color="accent" routerLink="/register"

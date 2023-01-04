@@ -2,7 +2,6 @@ import { AppState } from './../../shared/interfaces/app-state';
 import * as AbsenceActions from './../../shared/store/absences/actions';
 import { UserBackendService } from './../../shared/service/user-backend.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
 import { Component } from '@angular/core';
 import { take } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -40,8 +39,7 @@ export class LoginComponent {
             this.error = null;
             this.loading = false;
             sessionStorage.setItem('token', response.token);
-            this.router.navigate(['/']);
-            this.store.dispatch(AbsenceActions.getAbsences());
+            this.router.navigate(['/calendar']);
           }
         },
         error: (error: HttpErrorResponse) => {

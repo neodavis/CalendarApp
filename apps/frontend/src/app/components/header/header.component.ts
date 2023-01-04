@@ -5,8 +5,6 @@ import { Component } from '@angular/core';
 import { CreationComponent } from '../dialogs/creation/creation.component';
 import { AppState } from '../../shared/interfaces/app-state';
 import { Store } from '@ngrx/store';
-import * as AbsenceActions from '../../shared/store/absences/actions';
-import { Observable, takeUntil, Subject } from 'rxjs';
 import { LoginComponent } from "../login/login.component";
 
 
