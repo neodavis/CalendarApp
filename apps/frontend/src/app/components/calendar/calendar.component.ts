@@ -77,6 +77,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   public ngOnInit(): void {
+    this.store.dispatch(AbsenceActions.getAbsences());
+
     this.absences$.pipe(takeUntil(this.notifier)).subscribe((absences: Absence[]) => {
       this.calendar = this.calendarService.createCalendar(absences);
       this.absences = absences;
@@ -95,7 +97,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
         });
       }
     });
-    this.store.dispatch(AbsenceActions.getAbsences());
   }
 
   public ngOnDestroy(): void {
