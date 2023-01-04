@@ -22,7 +22,7 @@ export const editAbsence = createAction(
 
 export const deleteAbsence = createAction(
   '[Absence] Delete Absence',
-  props<{ absence_id: number; }>()
+  props<{ id: number; }>()
 );
 
 export const absenceQueryFailure = createAction(

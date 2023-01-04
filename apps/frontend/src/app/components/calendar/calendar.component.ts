@@ -71,7 +71,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   public deleteAbsence(id: number): void {
-    this.store.dispatch(AbsenceActions.deleteAbsence({ absence_id: id }));
+    this.store.dispatch(AbsenceActions.deleteAbsence({ id: id }));
   }
 
   public openEditorDialog(absence: Absence): void {

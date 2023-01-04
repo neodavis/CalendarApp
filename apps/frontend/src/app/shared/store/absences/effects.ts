@@ -22,8 +22,8 @@ export class AbsenceEffects {
   deleteAbsence$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AbsenceActions.deleteAbsence),
-      mergeMap((action: { absence_id: number; }) => {
-        return this.backendService.deleteAbsence(action.absence_id).pipe(
+      mergeMap((action: { id: number; }) => {
+        return this.backendService.deleteAbsence(action.id).pipe(
           switchMap(async () => AbsenceActions.getAbsences())
         );
       }),
